@@ -1,0 +1,178 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Socket.IO chat</title>
+    <style>
+        div .padded {
+            margin: 20px 0;
+            /* padding: 30px; */
+            box-sizing: border-box;
+        }
+
+        body {
+            font: 13px Helvetica, Arial;
+            margin: 0;
+            padding: 0;
+        }
+
+        form input {
+            border: 0;
+            padding: 10px;
+            width: 90%;
+            margin-right: .5%;
+        }
+
+        form button {
+            width: 60%;
+            height: 10%;
+            background: rgb(200, 20, 20);
+            border: none;
+            padding: 10px;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        #timestamps {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #timestamps li {
+            padding: 5px 10px;
+        }
+
+        #timestamps li:nth-child(odd) {
+            background: #eee;
+        }
+
+        td {
+            text-align: center;
+        }
+
+        #timestampsTable tr {
+            padding: 5px 10px;
+        }
+
+        #timestampsTable tbody td {
+            padding: 10px;
+        }
+
+        #timestampsTable thead td {
+            padding: 10px;
+        }
+
+        #timestampsTable tbody>tr:nth-child(odd) {
+            background-color: #eee;
+        }
+
+        .center {
+            margin: auto;
+            width: 50%;
+            /* border: 3px solid green;*/
+            padding: 50px;
+            text-align: center;
+        }
+
+        table.center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .debug {
+            background: #000;
+            color: #aaa;
+            padding: 3px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="center">
+        <h1>GönnBuzz</h1>
+        <h2>Host</h2>
+        <div class="padded">
+            <form id="reset" action="">
+                <button>RESET ALL</button>
+            </form>
+        </div>
+        <div class="padded">
+            <table id="timestampsTable" class="center" style="width: 40%">
+                <thead>
+                    <tr>
+                        <th>Pos #</th>
+                        <th>Name</th>
+                        <th>Time</th>
+                        <th>Offset [ms]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="debug">
+        <p id="debugtime"></p>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="/timesync/timesync.js"></script>
+    <script>
+        // create a timesync instance
+        var ts = timesync.create({
+            server: '/timesync',
+            interval: 1000
+        });
+
+        // get synchronized time
+        setInterval(function () {
+            var now = new Date(ts.now());
+            $('#debugtime').text('now: ' + now.toISOString() + ' ms')
+        }, 20);
+
+        $(function () {
+            var socket = io();
+
+            function clearTimestampList() {
+                $('#timestamps').empty();
+                $('#timestampsTable tbody > tr').remove();
+            }
+
+            $('form').filter('#reset').submit(function (e) {
+                e.preventDefault(); // prevents page reloading
+                socket.emit('reset');
+                setBuzzerState(false);
+                return false;
+            });
+
+            socket.on('timestampList', function (serverTimestampList) {
+                clearTimestampList();
+
+                let index = 1;
+                serverTimestampList.forEach(serverTimestamp => {
+                    const clientDate = new Date(serverTimestamp.clientTimestamp);
+                    $('#timestampsTable').append('<tr><td>' + index.toString() + '</td><td>' + serverTimestamp.clientName + '</td><td>' + clientDate.toLocaleTimeString() + '</td><td>' + serverTimestamp.offset.toString() + '</td></tr>');
+                    index++;
+                });
+            });
+
+            socket.on('reset', function () {
+                clearTimestampList();
+            });
+
+            socket.on('reload', function () {
+                window.location.reload();
+            });
+        });
+    </script>
+</body>
+
+</html>
