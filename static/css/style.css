@@ -9,7 +9,7 @@ body {
 }
 
 h1 {
-    font-size: 5em;
+    font-size: 2vw;
 }
 
 .container {
@@ -50,10 +50,11 @@ h1 {
 }
 
 .container > .box-buzzer {
-    width: 20%;
+    width: 30%;
+    min-width: 200px;
+    min-height: 200px;
     border-radius: 100%;
     background: #859900;
-    margin: 1% auto;
     border: none;
 }
 
