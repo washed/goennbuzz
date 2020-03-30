@@ -34,8 +34,9 @@
         </div>
     </section>
 
-    <div class="debug">
-        <p id="debugtime"></p>
+    <div class="debugcontainer">
+        <div class="debugbox" id="debugtime"></div>
+        <div class="debugbox" id="debugsync"></div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -46,6 +47,10 @@
         var ts = timesync.create({
             server: '/timesync',
             interval: 1000
+        });
+
+        ts.on('change', function (offset) {
+            $('#debugsync').text('tcorrection: ' + offset + ' ms')
         });
 
         // get synchronized time

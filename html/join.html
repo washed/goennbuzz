@@ -9,19 +9,22 @@
 </head>
 
 <body>
-    <div class="center">
-        <h1>GönnBuzz - Join</h1>
-        <div id="controls">
+    <section class="container">
+        <div class="box box-1">
+            <h1>GönnBuzz - Join</h1>
+        </div>
+
+        <div class="box" id="controls">
             <form action="">
                 <label for="fname">Name:</label>
                 <input type="text" id="fname" name="fname"><br>
             </form>
         </div>
 
-        <div id="buzzer"></div>
+        <div class="box box-buzzer" id="buzzer"></div>
 
-        <div class="padded">
-            <table id="timestampsTable" class="center" style="width: 40%">
+        <div class="box-3">
+            <table id="timestampsTable">
                 <thead>
                     <tr>
                         <th>Pos #</th>
@@ -34,10 +37,11 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    </section>
 
-    <div class="debug">
-        <p id="debugtime"></p>
+    <div class="debugcontainer">
+        <div class="debugbox" id="debugtime"></div>
+        <div class="debugbox" id="debugsync"></div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -48,6 +52,10 @@
         var ts = timesync.create({
             server: '/timesync',
             interval: 1000
+        });
+
+        ts.on('change', function (offset) {
+            $('#debugsync').text('tcorrection: ' + offset + ' ms')
         });
 
         // get synchronized time
