@@ -1,4 +1,5 @@
 var port = process.env.PORT || 3000,
+    express = require('express'),
     app = require('express')(),
     http = require('http').createServer(app),
     io = require('socket.io')(http),
@@ -6,18 +7,21 @@ var port = process.env.PORT || 3000,
 
 var TIMESTAMPS = [];
 
+// Make static content available
+app.use('/static', express.static(__dirname + '/static'));
+
 // handle GET
 app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/html/index.html');
 });
 
 
 app.get('/host/', function (req, res) {
-    res.sendFile(__dirname + '/host/index.html');
+    res.sendFile(__dirname + '/html/host.html');
 });
 
 app.get('/join/', function (req, res) {
-    res.sendFile(__dirname + '/join/index.html');
+    res.sendFile(__dirname + '/html/join.html');
 });
 
 // handle timesync requests

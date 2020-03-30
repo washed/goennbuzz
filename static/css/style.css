@@ -1,0 +1,141 @@
+html,
+body {
+    font: 13px Helvetica, Arial;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+h1 {
+    font-size: 5em;
+}
+
+.container {
+    display: flex;
+    height: 100%;
+    min-height: 100%;
+    margin: -2% 0;
+
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+.container > .box {
+    text-align: center;
+    padding: 2px;
+    margin: 1% 0; 
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.container > .box-1 {
+    height: 5%;
+}
+
+.container > .box-2 {
+    width: 20%;
+    border: none;
+    align-items: center;   
+}
+
+.container > .box-2:after {
+    content: "";
+    display: block;
+    padding-bottom: 20%;
+}
+
+.clickableHint {
+    cursor: pointer;
+}
+
+.blue {
+    background: rgb(16, 97, 202);
+    color: rgb(200, 200, 200);
+}
+
+.red {
+    background: rgb(163, 27, 27);
+    color: rgb(200, 200, 200);
+}
+
+.center {
+    margin: auto;
+    width: 50%;
+    padding: 1%;
+    text-align: center;
+}
+
+.debug {
+    background: #000;
+    color: #aaa;
+    padding: 1%;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+div .padded {
+    margin: 1% 0;
+    /* padding: 30px; */
+    box-sizing: border-box;
+}
+
+div #buzzer {
+    width: 60%;
+    border-radius: 100%;
+    background: rgb(20, 200, 20);
+    margin: 1% auto;
+    border: none;
+}
+
+div #buzzer:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+    text-align: center;
+}
+
+form input {
+    width: 30%;
+    padding: 1%;
+    border: 1;
+}
+
+.flexycenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+table .center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+table #timestamps {
+    border-collapse: collapse;
+}
+
+table td .center{
+    text-align: center;
+}
+
+table #timestampsTable tr {
+    padding: 5px 10px;
+}
+
+table #timestampsTable tbody td {
+    padding: 10px;
+}
+
+table #timestampsTable thead td {
+    padding: 10px;
+}
+
+table #timestampsTable tbody>tr:nth-child(odd) {
+    background-color: #eee;
+}
