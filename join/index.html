@@ -39,6 +39,21 @@
             text-align: center;
         }
 
+        div #buzzer {
+            width: 60%;
+            border-radius: 100%;
+            background: rgb(20, 200, 20);
+            margin: 1% auto;
+            border: none;
+        }
+
+        div #buzzer:after {
+            content: "";
+            display: block;
+            padding-bottom: 100%;
+            text-align: center;
+        }
+
         .flexycenter {
             display: flex;
             justify-content: center;
@@ -111,12 +126,14 @@
         <h1>GönnBuzz</h1>
         <h2>Join</h2>
         <div id="controls">
-            <form id="buzzer" action="">
+            <form action="">
                 <label for="fname">Name:</label><br>
                 <input type="text" id="fname" name="fname"><br>
-                <button></button>
             </form>
         </div>
+
+        <div id="buzzer"></div>
+
         <div class="padded">
             <table id="timestampsTable" class="center" style="width: 40%">
                 <thead>
@@ -175,15 +192,17 @@
                 }
             }
 
-            $('form').filter('#buzzer').submit(function (e) {
-                e.preventDefault(); // prevents page reloading
+            function buzzerHandler() {
                 if (!hasBuzzed) {
                     setBuzzerState(true);
                     var now = new Date(ts.now());
                     socket.emit('timestamp', [$('#fname').val(), now.valueOf()]);
                 }
                 return false;
-            });
+            }
+
+            $("#buzzer").on("mousedown", buzzerHandler);
+            $("#buzzer").on("touchstart", buzzerHandler);
 
             socket.on('timestampList', function (serverTimestampList) {
                 clearTimestampList();
