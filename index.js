@@ -1,21 +1,27 @@
-var app = require('express')();
-var http = require('http').createServer(app);
-var io = require('socket.io')(http);
-var timesyncServer = require('timesync/server');
+var port = process.env.PORT || 3000,
+    express = require('express'),
+    app = require('express')(),
+    http = require('http').createServer(app),
+    io = require('socket.io')(http),
+    timesyncServer = require('timesync/server');
 
 var TIMESTAMPS = [];
 
+// Make static content available
+app.use('/static', express.static(__dirname + '/static'));
+
 // handle GET
 app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/html/index.html');
 });
 
+
 app.get('/host/', function (req, res) {
-    res.sendFile(__dirname + '/host/index.html');
+    res.sendFile(__dirname + '/html/host.html');
 });
 
 app.get('/join/', function (req, res) {
-    res.sendFile(__dirname + '/join/index.html');
+    res.sendFile(__dirname + '/html/join.html');
 });
 
 // handle timesync requests
@@ -43,19 +49,6 @@ function populateOffsets(timestampList) {
             timestamp.offset = timestamp.clientTimestamp - firstTimestamp;
         });
     }
-}
-
-function sortAndSendTimestamps() {
-    TIMESTAMPS.sort(compareTimestamps);
-
-    populateOffsets(TIMESTAMPS);
-
-    TIMESTAMPS.forEach(timestamp => {
-        console.log(timestamp);
-    });
-
-    // Send new timestamps to the clients
-    io.emit('timestampList', TIMESTAMPS);
 }
 
 io.on('connection', function (socket) {
@@ -98,7 +91,6 @@ io.on('connection', function (socket) {
 
 io.on('connection', function (socket) {
     socket.on('reset', function () {
-        // TODO: reset here
         TIMESTAMPS = [];
 
         // Reset the clients
@@ -108,6 +100,6 @@ io.on('connection', function (socket) {
     });
 });
 
-http.listen(3000, function () {
-    console.log('listening on *:3000');
+http.listen(port, function () {
+    console.log('listening on *:' + port.toString());
 });
