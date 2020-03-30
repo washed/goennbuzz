@@ -2,20 +2,21 @@ var port = process.env.PORT || 8081,
     app = require('express')(),
     http = require('http').createServer(app),
     io = require('socket.io')(http),
-    timesyncServer = require('timesync/server');
-// fs = require('fs'),
-// html = fs.readFileSync('index.html');
+    timesyncServer = require('timesync/server'),
+    fs = require('fs'),
+    html = fs.readFileSync('index.html');
 
 var TIMESTAMPS = [];
 
 // handle GET
+/*
 app.get('/', function (req, res) {
     res.writeHead(200);
     res.write("<h1>Test</h1>");
     res.end();
 });
+*/
 
-/*
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
@@ -104,7 +105,6 @@ io.on('connection', function (socket) {
         console.log('RESET!');
     });
 });
-*/
 
 http.listen(port, function () {
     console.log('listening on *:' + port.toString());
