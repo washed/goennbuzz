@@ -21,7 +21,7 @@
             </form>
         </div>
 
-        <div class="box box-buzzer" id="buzzer"></div>
+        <div class="box box-buzzer clickableHint" id="buzzer"></div>
 
         <div class="box-3">
             <table id="timestampsTable">
@@ -76,11 +76,11 @@
 
             function setBuzzerState(state) {
                 if (state === true) {
-                    $("#buzzer").css('background', 'rgb(200, 20, 20)');
+                    $("#buzzer").css('background', '#dc322f');
                     hasBuzzed = true;
                 }
                 else if (state === false) {
-                    $("#buzzer").css('background', 'rgb(20, 200, 20)');
+                    $("#buzzer").css('background', '#859900');
                     clearTimestampList();
                     hasBuzzed = false;
                 }
