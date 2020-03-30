@@ -168,11 +168,11 @@
 
             function setBuzzerState(state) {
                 if (state === true) {
-                    $('form').filter('#buzzer').children('button').css('background', 'rgb(200, 20, 20)');
+                    $("#buzzer").css('background', 'rgb(200, 20, 20)');
                     hasBuzzed = true;
                 }
                 else if (state === false) {
-                    $('form').filter('#buzzer').children('button').css('background', 'rgb(20, 200, 20)');
+                    $("#buzzer").css('background', 'rgb(20, 200, 20)');
                     clearTimestampList();
                     hasBuzzed = false;
                 }
