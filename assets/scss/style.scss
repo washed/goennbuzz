@@ -1,0 +1,233 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Permanent+Marker");
+
+html,
+body {
+  font: 13pt;
+  font-family: "Roboto";
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #fdf6e3;
+  color: #002b36;
+}
+
+h1 {
+  font-size: 2em;
+  font-weight: 100;
+}
+
+.container {
+  display: flex;
+  height: 100%;
+  margin: 0;
+
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+}
+
+.container.justify_center {
+  justify-content: center;
+}
+
+.container.reactive {
+  display: flex;
+  height: 100%;
+  margin: 0;
+
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+}
+
+.container.align_start {
+  align-items: flex-start;
+}
+
+@media (orientation: landscape) {
+  .container.reactive {
+    flex-direction: row;
+  }
+}
+
+@media (orientation: portrait) {
+  .container.reactive {
+    flex-direction: column;
+  }
+}
+
+.container > .box {
+  text-align: center;
+  padding: 1rem;
+  margin: 0.5rem;
+
+  width: 50vmin;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.container > .box:after {
+  content: "";
+  display: block;
+  padding-bottom: 5%;
+}
+
+.container > .box-buzzer {
+  width: 100%;
+  border-radius: 100%;
+  background: #859900;
+  border: none;
+}
+
+.container > .box-buzzer:after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+  text-align: center;
+}
+
+#buzzer {
+  width: 50vmin;
+}
+
+.clickableHint {
+  cursor: pointer;
+}
+
+.blue {
+  background: #839496;
+  color: #002b36;
+}
+
+.darkblue {
+  background: #002b36;
+  color: #839496;
+}
+
+.red {
+  background: #dc322f;
+  color: #fdf6e3;
+}
+
+.green {
+  background: #859900;
+  color: #fdf6e3;
+}
+
+.center {
+  margin: auto;
+  width: 50%;
+  padding: 1vmin;
+  text-align: center;
+}
+
+.debugcontainer {
+  background: #000;
+  color: #aaa;
+
+  width: 100%;
+
+  box-sizing: border-box;
+  position: absolute;
+  bottom: 0;
+  padding: 0;
+  margin: 0;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+}
+
+.debugcontainer > .debugbox {
+  text-align: left;
+  padding: 0.5rem 15px;
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 300;
+
+  display: flex;
+}
+
+form input {
+  width: 30vmin;
+  padding: 1vmin;
+  border: 1;
+}
+
+.flexycenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+table .center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table #timestamps {
+  border-collapse: collapse;
+}
+
+table td .center {
+  text-align: center;
+}
+
+table #timestampsTable tr {
+  padding: 1vmin 2vmin;
+}
+
+table #timestampsTable tbody td {
+  padding: 2vmin;
+}
+
+table #timestampsTable thead td {
+  padding: 2vmin;
+}
+
+table #timestampsTable tbody > tr:nth-child(odd) {
+  background-color: #eee;
+}
+
+$r: 10px; // glow radius
+$o: 3px; // glow offset
+$d: 1.5s; // duration
+$chars: 16; // # of letters
+
+$c: #08f7fe #fe53bb #f5d300;
+
+span.glow {
+  font-family: "Permanent Marker";
+  font-size: 2rem;
+  animation: glow $d ease-in-out both infinite;
+
+  @for $i from 1 through $chars {
+    &:nth-child(#{$i}) {
+      animation-delay: $i/$chars * -$d;
+    }
+  }
+}
+
+@mixin glow($c1, $c2, $c3) {
+  text-shadow: 0 0 $r/6 snow, 0 (-$o) $r $c3, (-$o) $o $r $c2, $o $o $r $c3;
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    @include glow(nth($c, 1), nth($c, 2), nth($c, 3));
+  }
+  33% {
+    @include glow(nth($c, 2), nth($c, 3), nth($c, 1));
+  }
+  66% {
+    @include glow(nth($c, 3), nth($c, 1), nth($c, 2));
+  }
+}
