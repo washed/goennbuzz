@@ -1,6 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap");
+
 html,
 body {
-  font: 13px Helvetica, Arial;
+  font: 13pt;
+  font-family: "Roboto";
+  font-weight: 400;
   margin: 0;
   padding: 0;
   height: 100%;
@@ -9,50 +13,71 @@ body {
 }
 
 h1 {
-  font-size: 2vw;
+  font-size: 2em;
+  font-weight: 100;
 }
 
 .container {
   display: flex;
   height: 100%;
-  min-height: 100%;
   margin: 0;
 
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-around;
   align-items: center;
   align-content: center;
 }
 
+.container.justify_center {
+  justify-content: center;
+}
+
+.container.reactive {
+  display: flex;
+  height: 100%;
+  margin: 0;
+
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+}
+
+.container.align_start {
+  align-items: flex-start;
+}
+
+@media (orientation: landscape) {
+  .container.reactive {
+    flex-direction: row;
+  }
+}
+
+@media (orientation: portrait) {
+  .container.reactive {
+    flex-direction: column;
+  }
+}
+
 .container > .box {
   text-align: center;
-  padding: 1%;
-  margin: 1% 0;
+  padding: 1rem;
+  margin: 0.5rem;
+
+  width: 50vmin;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.container > .box-1 {
-  height: 5%;
-}
-
-.container > .box-2 {
-  width: 15%;
-  align-items: center;
-}
-
-.container > .box-2:after {
+.container > .box:after {
   content: "";
   display: block;
-  padding-bottom: 15%;
+  padding-bottom: 5%;
 }
 
 .container > .box-buzzer {
-  width: 30%;
-  min-width: 200px;
-  min-height: 200px;
+  width: 100%;
   border-radius: 100%;
   background: #859900;
   border: none;
@@ -63,6 +88,10 @@ h1 {
   display: block;
   padding-bottom: 100%;
   text-align: center;
+}
+
+#buzzer {
+  width: 50vmin;
 }
 
 .clickableHint {
@@ -92,7 +121,7 @@ h1 {
 .center {
   margin: auto;
   width: 50%;
-  padding: 1%;
+  padding: 1vmin;
   text-align: center;
 }
 
@@ -101,6 +130,8 @@ h1 {
   color: #aaa;
 
   width: 100%;
+
+  box-sizing: border-box;
   position: absolute;
   bottom: 0;
   padding: 0;
@@ -108,22 +139,24 @@ h1 {
 
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: space-around;
   align-items: center;
-  align-content: flex-start;
+  align-content: center;
 }
 
 .debugcontainer > .debugbox {
   text-align: left;
-  padding: 1%;
-  margin: 0 0;
+  padding: 0.5rem 15px;
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 300;
 
   display: flex;
 }
 
 form input {
-  width: 30%;
-  padding: 1%;
+  width: 30vmin;
+  padding: 1vmin;
   border: 1;
 }
 
@@ -147,15 +180,15 @@ table td .center {
 }
 
 table #timestampsTable tr {
-  padding: 5px 10px;
+  padding: 1vmin 2vmin;
 }
 
 table #timestampsTable tbody td {
-  padding: 10px;
+  padding: 2vmin;
 }
 
 table #timestampsTable thead td {
-  padding: 10px;
+  padding: 2vmin;
 }
 
 table #timestampsTable tbody > tr:nth-child(odd) {
