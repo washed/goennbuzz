@@ -54,72 +54,50 @@ h1 {
   justify-content: space-around;
   align-items: center;
   align-content: center;
-}
 
-.container.justify_center {
-  justify-content: center;
-}
+  &.reactive {
+    display: flex;
+    height: 100%;
+    margin: 0;
 
-.container.reactive {
-  display: flex;
-  height: 100%;
-  margin: 0;
+    @media (orientation: landscape) {
+      flex-direction: row;
+    }
 
-  justify-content: space-around;
-  align-items: center;
-  align-content: center;
-}
+    @media (orientation: portrait) {
+      flex-direction: column;
+    }
+  }
 
-.container.align_start {
-  align-items: flex-start;
-}
+  &.box {
+    text-align: center;
+    padding: 1rem;
+    margin: 0.5rem;
+    width: 50%;
+  }
 
-@media (orientation: landscape) {
-  .container.reactive {
-    flex-direction: row;
+  &.justify_center {
+    justify-content: center;
+  }
+
+  &.align_start {
+    align-items: flex-start;
   }
 }
 
-@media (orientation: portrait) {
-  .container.reactive {
-    flex-direction: column;
-  }
-}
-
-.container > .box {
-  text-align: center;
-  padding: 1rem;
-  margin: 0.5rem;
-
-  width: 80%;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.container > .box:after {
-  content: "";
-  display: block;
-  padding-bottom: 5%;
-}
-
-.container > .box-buzzer {
-  width: 100%;
+.box-buzzer {
+  width: 50vmin;
+  margin: 1%;
   border-radius: 100%;
   background: #859900;
   border: none;
 }
 
-.container > .box-buzzer:after {
+.box-buzzer:after {
   content: "";
   display: block;
   padding-bottom: 100%;
   text-align: center;
-}
-
-#buzzer {
-  width: 50vmin;
 }
 
 .clickableHint {
@@ -170,16 +148,16 @@ h1 {
   justify-content: space-around;
   align-items: center;
   align-content: center;
-}
 
-.debugcontainer > .debugbox {
-  text-align: left;
-  padding: 0.5rem 15px;
-  margin: 0;
-  font-size: 0.75rem;
-  font-weight: 300;
+  > .debugbox {
+    text-align: left;
+    padding: 0.5rem 15px;
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 300;
 
-  display: flex;
+    display: flex;
+  }
 }
 
 form input {
@@ -194,33 +172,40 @@ form input {
   align-items: center;
 }
 
-table .center {
-  margin-left: auto;
-  margin-right: auto;
-}
+table {
+  table-layout: fixed;
+  width: 80%;
 
-table #timestamps {
-  border-collapse: collapse;
-}
+  &.center {
+    margin-left: auto;
+    margin-right: auto;
+  }
 
-table td .center {
-  text-align: center;
-}
+  &#timestamps {
+    border-collapse: collapse;
+  }
 
-table #timestampsTable tr {
-  padding: 1vmin 2vmin;
-}
+  &#timestampsTable {
+    &tr {
+      padding: 1vmin 2vmin;
+    }
 
-table #timestampsTable tbody td {
-  padding: 2vmin;
-}
+    &td .center {
+      text-align: center;
+    }
 
-table #timestampsTable thead td {
-  padding: 2vmin;
-}
+    &tbody td {
+      padding: 2vmin;
+    }
 
-table #timestampsTable tbody > tr:nth-child(odd) {
-  background-color: #eee;
+    &thead td {
+      padding: 2vmin;
+    }
+
+    &tbody > tr:nth-child(odd) {
+      background-color: #000;
+    }
+  }
 }
 
 $r: 10px; // glow radius
