@@ -18,21 +18,34 @@ h1 {
 
 .maincontainer {
   display: flex;
-  height: 100vw;
+  height: calc(100vh - 30px);
   width: 100vw;
   margin: 0;
   padding: 0;
   flex-direction: column;
-  justify-content: start;
-  align-items: center;
-  align-content: center; }
-  .maincontainer .box {
+  justify-content: flex-start;
+  align-items: stretch; }
+  .maincontainer > .box {
     text-align: center;
     padding: 0;
     margin: 0;
     width: 100%;
     display: flex;
-    justify-content: center; }
+    justify-content: center;
+    flex: 0 1 auto; }
+    .maincontainer > .box.stretchy {
+      flex: 1 1 auto; }
+
+.box {
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex: initial; }
+  .box.stretchy {
+    flex: 1 1 auto; }
 
 .container {
   display: flex;
@@ -46,25 +59,23 @@ h1 {
   .container.reactive {
     display: flex;
     height: 100%;
-    margin: 0; }
+    margin: 0;
+    padding: 0 0.5rem;
+    justify-content: flex-start;
+    align-items: flex-start; }
     @media (orientation: landscape) {
       .container.reactive {
         flex-direction: row; } }
     @media (orientation: portrait) {
       .container.reactive {
         flex-direction: column; } }
-  .container.box {
-    text-align: center;
-    padding: 1rem;
-    margin: 0.5rem;
-    width: 50%; }
-  .container.justify_center {
+  .container > .justify_center {
     justify-content: center; }
-  .container.align_start {
+  .container > .align_start {
     align-items: flex-start; }
 
 .box-buzzer {
-  width: 50vmin;
+  width: 50%;
   margin: 1%;
   border-radius: 100%;
   background: #859900;
@@ -95,16 +106,11 @@ h1 {
   background: #859900;
   color: #fdf6e3; }
 
-.center {
-  margin: auto;
-  width: 50%;
-  padding: 1vmin;
-  text-align: center; }
-
 .debugcontainer {
   background: #000;
   color: #aaa;
   width: 100%;
+  height: 30px;
   box-sizing: border-box;
   position: absolute;
   bottom: 0;
@@ -133,22 +139,64 @@ form input {
   justify-content: center;
   align-items: center; }
 
+th:nth-child(1),
+td:nth-child(1) {
+  width: 5%; }
+
+th:nth-child(2),
+td:nth-child(2) {
+  width: 25%; }
+
+th:nth-child(3),
+td:nth-child(3) {
+  width: 20%; }
+
+th:nth-child(4),
+td:nth-child(4) {
+  width: 25%; }
+
+th:nth-child(5),
+td:nth-child(5) {
+  width: 25%; }
+
 table {
   table-layout: fixed;
-  width: 80%; }
-  table.center {
+  width: 100%;
+  border-collapse: collapse;
+  /*
+  &.center {
     margin-left: auto;
-    margin-right: auto; }
-  table#timestamps {
-    border-collapse: collapse; }
-  table#timestampsTabletr {
-    padding: 1vmin 2vmin; }
-  table#timestampsTabletd .center {
-    text-align: center; }
-  table#timestampsTabletbody td {
-    padding: 2vmin; }
-  table#timestampsTablethead td {
-    padding: 2vmin; }
+    margin-right: auto;
+  }
+
+  &#timestamps {
+    border-collapse: collapse;
+  }
+
+  &#timestampsTable {
+    &tr {
+      padding: 1vmin 2vmin;
+    }
+
+    &td .center {
+      text-align: center;
+    }
+
+    &tbody td {
+      padding: 2vmin;
+    }
+
+    &thead td {
+      padding: 2vmin;
+    }
+  }
+  */ }
+  table.fixed_header tbody {
+    display: block;
+    overflow: auto;
+    height: 100%; }
+  table.fixed_header thead tr {
+    display: block; }
 
 span.glow {
   font-family: "Permanent Marker";

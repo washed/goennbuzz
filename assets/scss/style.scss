@@ -1,6 +1,17 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Permanent+Marker");
 
+// Debug stuff
+$debugbar_height: 30px;
+
+// Glowy stuff
+$r: 10px; // glow radius
+$o: 3px; // glow offset
+$d: 1.5s; // duration
+$chars: 16; // # of letters
+
+$c: #08f7fe #fe53bb #f5d300;
+
 html,
 body {
   font: 13pt;
@@ -22,17 +33,17 @@ h1 {
 
 .maincontainer {
   display: flex;
-  height: 100vw;
+  height: calc(100vh - #{$debugbar_height});
   width: 100vw;
   margin: 0;
   padding: 0;
 
   flex-direction: column;
-  justify-content: start;
-  align-items: center;
-  align-content: center;
+  justify-content: flex-start;
+  align-items: stretch;
+  // align-content: center;
 
-  .box {
+  > .box {
     text-align: center;
     padding: 0;
     margin: 0;
@@ -41,6 +52,29 @@ h1 {
 
     display: flex;
     justify-content: center;
+
+    flex: 0 1 auto;
+
+    &.stretchy {
+      flex: 1 1 auto;
+    }
+  }
+}
+
+.box {
+  text-align: center;
+  padding: 0;
+  margin: 0;
+
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+
+  flex: initial; //0 1 auto;
+
+  &.stretchy {
+    flex: 1 1 auto;
   }
 }
 
@@ -59,6 +93,10 @@ h1 {
     display: flex;
     height: 100%;
     margin: 0;
+    padding: 0 0.5rem;
+
+    justify-content: flex-start;
+    align-items: flex-start;
 
     @media (orientation: landscape) {
       flex-direction: row;
@@ -69,24 +107,17 @@ h1 {
     }
   }
 
-  &.box {
-    text-align: center;
-    padding: 1rem;
-    margin: 0.5rem;
-    width: 50%;
-  }
-
-  &.justify_center {
+  & > .justify_center {
     justify-content: center;
   }
 
-  &.align_start {
+  & > .align_start {
     align-items: flex-start;
   }
 }
 
 .box-buzzer {
-  width: 50vmin;
+  width: 50%;
   margin: 1%;
   border-radius: 100%;
   background: #859900;
@@ -124,18 +155,12 @@ h1 {
   color: #fdf6e3;
 }
 
-.center {
-  margin: auto;
-  width: 50%;
-  padding: 1vmin;
-  text-align: center;
-}
-
 .debugcontainer {
   background: #000;
   color: #aaa;
 
   width: 100%;
+  height: $debugbar_height;
 
   box-sizing: border-box;
   position: absolute;
@@ -172,10 +197,41 @@ form input {
   align-items: center;
 }
 
+th,
+td {
+  &:nth-child(1) {
+    width: 5%;
+  }
+  &:nth-child(2) {
+    width: 25%;
+  }
+  &:nth-child(3) {
+    width: 20%;
+  }
+  &:nth-child(4) {
+    width: 25%;
+  }
+  &:nth-child(5) {
+    width: 25%;
+  }
+}
+
 table {
   table-layout: fixed;
-  width: 80%;
+  width: 100%;
+  border-collapse: collapse;
 
+  &.fixed_header tbody {
+    display: block;
+    overflow: auto;
+    height: 100%;
+  }
+
+  &.fixed_header thead tr {
+    display: block;
+  }
+
+  /*
   &.center {
     margin-left: auto;
     margin-right: auto;
@@ -202,14 +258,8 @@ table {
       padding: 2vmin;
     }
   }
+  */
 }
-
-$r: 10px; // glow radius
-$o: 3px; // glow offset
-$d: 1.5s; // duration
-$chars: 16; // # of letters
-
-$c: #08f7fe #fe53bb #f5d300;
 
 span.glow {
   font-family: "Permanent Marker";

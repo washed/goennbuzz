@@ -21,20 +21,20 @@
         </div>
       </div>
 
-      <div class="box">
+      <div class="box stretchy">
         <div class="container reactive">
           <div class="box">
             <div class="box-buzzer clickableHint" id="buzzer"></div>
           </div>
-          <div class="box">
-            <table id="timestampsTable">
+          <div class="box stretchy">
+            <table id="timestampsTable" class="fixed_header">
               <thead>
                 <tr>
-                  <th style="width: 5%;">Pos #</th>
-                  <th style="width: 25%;">Name</th>
-                  <th style="width: 20%;">Time</th>
-                  <th style="width: 25%;">Offset [ms]</th>
-                  <th style="width: 25%;"></th>
+                  <th>Pos #</th>
+                  <th>Name</th>
+                  <th>Time</th>
+                  <th>Offset [ms]</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody></tbody>
@@ -42,14 +42,11 @@
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="box">
-        <div class="debugcontainer">
-          1
-          <div class="debugbox" id="debugtime"></div>
-          <div class="debugbox" id="debugsync"></div>
-        </div>
-      </div>
+    <div class="debugcontainer">
+      <div class="debugbox" id="debugtime"></div>
+      <div class="debugbox" id="debugsync"></div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
