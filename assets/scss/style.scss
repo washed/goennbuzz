@@ -1,16 +1,30 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Permanent+Marker");
 
+// Debug stuff
+$debugbar_height: 30px;
+
+// Glowy stuff
+$r: 10px; // glow radius
+$o: 3px; // glow offset
+$d: 1.5s; // duration
+$chars: 16; // # of letters
+
+$c: #08f7fe #fe53bb #f5d300;
+
 html,
 body {
   font: 13pt;
   font-family: "Roboto";
   font-weight: 400;
+  width: 100vw;
+  height: 100vh;
   margin: 0;
   padding: 0;
-  height: 100%;
   background-color: #fdf6e3;
   color: #002b36;
+
+  overflow: auto;
 }
 
 h1 {
@@ -18,81 +32,103 @@ h1 {
   font-weight: 100;
 }
 
+.maincontainer {
+  display: flex;
+  height: calc(100vh - #{$debugbar_height});
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+
+  > .box {
+    text-align: center;
+    padding: 0;
+    margin: 0;
+
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+
+    flex: 0 1 auto;
+
+    &.stretchy {
+      flex: 1 1 auto;
+    }
+  }
+}
+
+.box {
+  text-align: center;
+  padding: 0;
+  margin: 0;
+
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+
+  flex: initial;
+
+  &.stretchy {
+    flex: 1 1 auto;
+  }
+}
+
 .container {
   display: flex;
   height: 100%;
-  margin: 0;
-
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  align-content: center;
-}
-
-.container.justify_center {
-  justify-content: center;
-}
-
-.container.reactive {
-  display: flex;
-  height: 100%;
-  margin: 0;
-
-  justify-content: space-around;
-  align-items: center;
-  align-content: center;
-}
-
-.container.align_start {
-  align-items: flex-start;
-}
-
-@media (orientation: landscape) {
-  .container.reactive {
-    flex-direction: row;
-  }
-}
-
-@media (orientation: portrait) {
-  .container.reactive {
-    flex-direction: column;
-  }
-}
-
-.container > .box {
-  text-align: center;
-  padding: 1rem;
-  margin: 0.5rem;
-
-  width: 50vmin;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.container > .box:after {
-  content: "";
-  display: block;
-  padding-bottom: 5%;
-}
-
-.container > .box-buzzer {
   width: 100%;
+  margin: 0;
+
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+
+  &.reactive {
+    display: flex;
+    height: 100%;
+    margin: 0;
+    padding: 0 0.5rem;
+
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    @media (orientation: landscape) {
+      flex-direction: row;
+    }
+
+    @media (orientation: portrait) {
+      flex-direction: column;
+    }
+  }
+
+  & > .justify_center {
+    justify-content: center;
+  }
+
+  & > .align_start {
+    align-items: flex-start;
+  }
+}
+
+.box-buzzer {
+  width: 50%;
+  margin: 1%;
   border-radius: 100%;
   background: #859900;
   border: none;
 }
 
-.container > .box-buzzer:after {
+.box-buzzer:after {
   content: "";
   display: block;
   padding-bottom: 100%;
   text-align: center;
-}
-
-#buzzer {
-  width: 50vmin;
 }
 
 .clickableHint {
@@ -119,11 +155,14 @@ h1 {
   color: #fdf6e3;
 }
 
-.center {
-  margin: auto;
-  width: 50%;
-  padding: 1vmin;
-  text-align: center;
+#reset {
+  height: 20vh;
+}
+
+.big-button {
+  width: 500px;
+  height: 160px;
+  margin: 10px;
 }
 
 .debugcontainer {
@@ -131,9 +170,10 @@ h1 {
   color: #aaa;
 
   width: 100%;
+  height: $debugbar_height;
 
   box-sizing: border-box;
-  position: absolute;
+  position: fixed;
   bottom: 0;
   padding: 0;
   margin: 0;
@@ -143,16 +183,16 @@ h1 {
   justify-content: space-around;
   align-items: center;
   align-content: center;
-}
 
-.debugcontainer > .debugbox {
-  text-align: left;
-  padding: 0.5rem 15px;
-  margin: 0;
-  font-size: 0.75rem;
-  font-weight: 300;
+  > .debugbox {
+    text-align: left;
+    padding: 0.5rem 15px;
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 300;
 
-  display: flex;
+    display: flex;
+  }
 }
 
 form input {
@@ -167,45 +207,47 @@ form input {
   align-items: center;
 }
 
-table .center {
-  margin-left: auto;
-  margin-right: auto;
+th,
+td {
+  &:nth-child(1) {
+    width: 5%;
+  }
+  &:nth-child(2) {
+    width: 25%;
+  }
+  &:nth-child(3) {
+    width: 20%;
+  }
+  &:nth-child(4) {
+    width: 25%;
+  }
+  &:nth-child(5) {
+    width: 25%;
+  }
 }
 
-table #timestamps {
-  border-collapse: collapse;
+table {
+  width: 100%;
 }
 
-table td .center {
-  text-align: center;
+tbody {
+  height: 100%;
+  overflow: auto;
 }
 
-table #timestampsTable tr {
-  padding: 1vmin 2vmin;
+td {
+  display: inline-block;
+  box-sizing: border-box;
 }
 
-table #timestampsTable tbody td {
-  padding: 2vmin;
+tr,
+tbody {
+  display: block;
 }
-
-table #timestampsTable thead td {
-  padding: 2vmin;
-}
-
-table #timestampsTable tbody > tr:nth-child(odd) {
-  background-color: #eee;
-}
-
-$r: 10px; // glow radius
-$o: 3px; // glow offset
-$d: 1.5s; // duration
-$chars: 16; // # of letters
-
-$c: #08f7fe #fe53bb #f5d300;
 
 span.glow {
   font-family: "Permanent Marker";
-  font-size: 2rem;
+  font-size: 1rem;
   animation: glow $d ease-in-out both infinite;
 
   @for $i from 1 through $chars {
