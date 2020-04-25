@@ -5,12 +5,13 @@ body {
   font: 13pt;
   font-family: "Roboto";
   font-weight: 400;
+  width: 100vw;
+  height: 100vh;
   margin: 0;
   padding: 0;
-  height: 100%;
   background-color: #fdf6e3;
   color: #002b36;
-  overflow: hidden; }
+  overflow: auto; }
 
 h1 {
   font-size: 2em;
@@ -160,43 +161,19 @@ td:nth-child(5) {
   width: 25%; }
 
 table {
-  table-layout: fixed;
-  width: 100%;
-  border-collapse: collapse;
-  /*
-  &.center {
-    margin-left: auto;
-    margin-right: auto;
-  }
+  width: 100%; }
 
-  &#timestamps {
-    border-collapse: collapse;
-  }
+tbody {
+  height: 100%;
+  overflow: auto; }
 
-  &#timestampsTable {
-    &tr {
-      padding: 1vmin 2vmin;
-    }
+td {
+  display: inline-block;
+  box-sizing: border-box; }
 
-    &td .center {
-      text-align: center;
-    }
-
-    &tbody td {
-      padding: 2vmin;
-    }
-
-    &thead td {
-      padding: 2vmin;
-    }
-  }
-  */ }
-  table.fixed_header tbody {
-    display: block;
-    overflow: auto;
-    height: 100%; }
-  table.fixed_header thead tr {
-    display: block; }
+tr,
+tbody {
+  display: block; }
 
 span.glow {
   font-family: "Permanent Marker";
