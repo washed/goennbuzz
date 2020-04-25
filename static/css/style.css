@@ -149,8 +149,6 @@ table {
     padding: 2vmin; }
   table#timestampsTablethead td {
     padding: 2vmin; }
-  table#timestampsTabletbody > tr:nth-child(odd) {
-    background-color: #000; }
 
 span.glow {
   font-family: "Permanent Marker";
