@@ -13,26 +13,25 @@
         <h1>GönnBuzz - Host</h1>
       </div>
 
-      <div class="box">
-        <div class="container">
-          <div class="container reactive">
-            <div class="box red clickableHint" id="reset">
-              RESET ALL
-            </div>
+      <div class="box stretchy">
+        <div class="container reactive">
+          <div class="box red clickableHint" id="reset">
+            <p>RESET ALL</p>
+          </div>
 
-            <div class="box">
-              <table id="timestampsTable">
-                <thead>
-                  <tr>
-                    <th>Pos #</th>
-                    <th>Name</th>
-                    <th>Time</th>
-                    <th>Offset [ms]</th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
+          <div class="box stretchy">
+            <table id="timestampsTable" class="fixed_header">
+              <thead>
+                <tr>
+                  <th>Pos #</th>
+                  <th>Name</th>
+                  <th>Time</th>
+                  <th>Offset [ms]</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -78,6 +77,17 @@
           return false;
         }
 
+        function make_it_glow_bitch(str) {
+          var glowy_string_html = "<div>";
+          for (var i = 0; i < str.length; i++) {
+            glowy_string_html = glowy_string_html.concat(
+              "<span class='glow'>" + str.charAt(i) + "</span>"
+            );
+          }
+          glowy_string_html = glowy_string_html.concat("</div>");
+          return glowy_string_html;
+        }
+
         $("#reset").on("click", resetHandler);
 
         socket.on("timestampList", function (serverTimestampList) {
@@ -95,6 +105,8 @@
                 clientDate.toLocaleTimeString() +
                 "</td><td>" +
                 serverTimestamp.offset.toString() +
+                "</td><td>" +
+                (index == 1 ? make_it_glow_bitch("DU BIST JA GEIL!") : "") +
                 "</td></tr>"
             );
             index++;

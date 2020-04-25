@@ -155,6 +155,16 @@ h1 {
   color: #fdf6e3;
 }
 
+#reset {
+  height: 20vh;
+}
+
+.big-button {
+  width: 500px;
+  height: 160px;
+  margin: 10px;
+}
+
 .debugcontainer {
   background: #000;
   color: #aaa;
@@ -163,7 +173,7 @@ h1 {
   height: $debugbar_height;
 
   box-sizing: border-box;
-  position: absolute;
+  position: fixed;
   bottom: 0;
   padding: 0;
   margin: 0;
