@@ -81,7 +81,7 @@
       setInterval(function () {
         var now = new Date(ts.now());
         $("#debugtime").text("now: " + now.toISOString() + " ms");
-      }, 20);
+      }, 500);
 
       $(function () {
         var socket = io();
