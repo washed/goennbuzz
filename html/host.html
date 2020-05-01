@@ -120,7 +120,7 @@
 
         // geklaut von: https://www.geeksforgeeks.org/split-the-number-into-n-parts-such-that-difference-between-the-smallest-and-the-largest-part-is-minimum/
         // geht sich genau aus...
-        var ppl_per_team = new Array();
+        var ppl_per_team = [];
         if (ppl_count % team_count == 0) {
           for (var i = 0; i < team_count; i++) {
             ppl_per_team.push(default_ppl_per_team);

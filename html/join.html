@@ -167,7 +167,6 @@
         });
 
         socket.on("teamstringJoin", function ([teamString]) {
-          console.log("Received teamstring: " + teamString);
           $("#teams > tbody").remove();
           $("#teams").append(teamString);
         });

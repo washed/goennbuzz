@@ -171,8 +171,8 @@ form input {
 table#teams {
   border-collapse: collapse; }
   table#teams tbody {
-    border-top: 20px solid transparent;
-    border-bottom: 20px solid transparent; }
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent; }
     table#teams tbody:nth-child(2) {
       background-color: #dc322f; }
     table#teams tbody:nth-child(3) {
