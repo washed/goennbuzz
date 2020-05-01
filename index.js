@@ -6,6 +6,9 @@ var port = process.env.PORT || 3000,
   timesyncServer = require("timesync/server");
 
 var TIMESTAMPS = [];
+var TEAM_STRING = "";
+var TEAM_NAMES = "";
+var TEAM_COUNT = 0;
 
 // Make static content available
 app.use("/static", express.static(__dirname + "/static"));
@@ -59,6 +62,13 @@ io.on("connection", function (socket) {
   // Send timestamps to the clients
   io.emit("timestampList", TIMESTAMPS);
 
+  // Send teams to the clients
+  io.emit("teamstringJoin", [TEAM_STRING]);
+
+  // Send team builder inputs to the host on reconnect
+  io.emit("teamstringNamesHost", [TEAM_NAMES]);
+  io.emit("teamstringTeamCountHost", [TEAM_COUNT]);
+
   io.clients((error, clients) => {
     if (error) throw error;
     console.log(clients);
@@ -90,6 +100,31 @@ io.on("connection", function (socket) {
 
     // Send timestamps to the clients
     io.emit("timestampList", TIMESTAMPS);
+  });
+});
+
+io.on("connection", function (socket) {
+  socket.on("teamstringHost", function ([teamstringHost]) {
+    TEAM_STRING = teamstringHost;
+
+    console.log("Received from host: " + teamstringHost);
+
+    // Send the new teamString to the clients
+    io.emit("teamstringJoin", [TEAM_STRING]);
+  });
+
+  socket.on("teamstringNames", function ([teamstringNames]) {
+    TEAM_NAMES = teamstringNames;
+    console.log("Received from host: " + TEAM_NAMES);
+
+    io.emit("teamstringNamesHost", [TEAM_NAMES]);
+  });
+
+  socket.on("teamstringTeamCount", function ([teamstringTeamCount]) {
+    TEAM_COUNT = teamstringTeamCount;
+    console.log("Received from host: " + TEAM_COUNT);
+
+    io.emit("teamstringTeamCountHost", [TEAM_COUNT]);
   });
 });
 

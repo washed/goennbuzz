@@ -15,8 +15,44 @@
 
       <div class="box stretchy">
         <div class="container reactive">
-          <div class="box red clickableHint" id="reset">
-            <p>RESET ALL</p>
+          <div class="box">
+            <div class="container">
+              <div class="box red clickableHint" id="reset">
+                <p>RESET ALL</p>
+              </div>
+              <div class="box">
+                <p>TEAMS</p>
+              </div>
+              <div class="box">
+                <form action="">
+                  <label for="f_team_count">Anzahl Teams:</label>
+                  <input
+                    type="number"
+                    id="f_team_count"
+                    name="f_team_count"
+                  /><br />
+                  <label for="f_player_names"
+                    >Spieler, mit Komma getrennt:</label
+                  >
+                  <input
+                    type="text"
+                    id="f_player_names"
+                    name="f_player_names"
+                  /><br />
+                </form>
+              </div>
+              <div class="box blue clickableHint" id="make_teams">
+                <p>Make it so!</p>
+              </div>
+              <table id="teams">
+                <thead>
+                  <th>Team #</th>
+                  <th>Name</th>
+                  <th>Score</th>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
           </div>
 
           <div class="box stretchy">
@@ -63,6 +99,88 @@
         var now = new Date(ts.now());
         $("#debugtime").text("now: " + now.toISOString() + " ms");
       }, 20);
+
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      }
+
+      function makeTeams() {
+        var team_count = $("#f_team_count").val();
+        var names = $("#f_player_names").val();
+        var nameArr = names
+          .split(",")
+          .map(Function.prototype.call, String.prototype.trim);
+
+        var ppl_count = nameArr.length;
+        var default_ppl_per_team = Math.round(ppl_count / team_count);
+        console.log("Base ppl_per_team: " + default_ppl_per_team);
+
+        // geklaut von: https://www.geeksforgeeks.org/split-the-number-into-n-parts-such-that-difference-between-the-smallest-and-the-largest-part-is-minimum/
+        // geht sich genau aus...
+        var ppl_per_team = new Array();
+        if (ppl_count % team_count == 0) {
+          for (var i = 0; i < team_count; i++) {
+            ppl_per_team.push(default_ppl_per_team);
+          }
+        } else {
+          // upto n-(x % n) the values
+          // will be x / n
+          // after that the values
+          // will be x / n + 1
+          var zp = team_count - (ppl_count % team_count);
+          var pp = Math.floor(ppl_count / team_count);
+          for (var i = 0; i < team_count; i++) {
+            if (i >= zp) {
+              ppl_per_team.push(pp + 1);
+            } else {
+              ppl_per_team.push(pp);
+            }
+          }
+        }
+
+        shuffleArray(nameArr);
+
+        console.log("People per team: " + ppl_per_team.toString());
+
+        var team_string = "";
+        for (var i = 0; i < team_count; i++) {
+          team_string += "<tbody>";
+          team_string +=
+            "<tr><td rowspan='" + ppl_per_team[i] + "'>" + (i + 1) + "</td>";
+          for (var j = 0; j < ppl_per_team[i]; j++) {
+            var player = nameArr.pop();
+
+            if (j == 0) {
+              team_string +=
+                "<td>" +
+                player +
+                "</td><td rowspan='" +
+                ppl_per_team[i] +
+                "'></td></tr>";
+            } else {
+              team_string += "<tr><td>" + player + "</td></tr>";
+            }
+          }
+          team_string += "</tbody>";
+        }
+
+        // Send teamstring to server for distribution
+        $(function () {
+          var socket = io();
+          console.log("Received from host: " + [team_string]);
+
+          // TODO: THis should be a single emit, maybe use JSON
+          socket.emit("teamstringNames", [names]);
+          socket.emit("teamstringTeamCount", [team_count]);
+          socket.emit("teamstringHost", [team_string]);
+        });
+      }
+
+      $("#make_teams").on("mousedown", makeTeams);
+      $("#make_teams").on("touchstart", makeTeams);
 
       $(function () {
         var socket = io();
@@ -119,6 +237,20 @@
 
         socket.on("reload", function () {
           window.location.reload();
+        });
+
+        socket.on("teamstringJoin", function ([teamString]) {
+          console.log("Received teamstring: " + teamString);
+          $("#teams > tbody").remove();
+          $("#teams").append(teamString);
+        });
+
+        socket.on("teamstringNamesHost", function ([TEAM_NAMES]) {
+          $("#f_player_names").val(TEAM_NAMES);
+        });
+
+        socket.on("teamstringTeamCountHost", function ([TEAM_COUNT]) {
+          $("#f_team_count").val(TEAM_COUNT);
         });
       });
     </script>

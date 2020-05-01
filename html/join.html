@@ -24,7 +24,21 @@
       <div class="box stretchy">
         <div class="container reactive">
           <div class="box">
-            <div class="box-buzzer clickableHint" id="buzzer"></div>
+            <div class="container">
+              <div class="box">
+                <div class="box-buzzer clickableHint" id="buzzer"></div>
+              </div>
+              <div class="box">
+                <table id="teams">
+                  <thead>
+                    <th>Team #</th>
+                    <th>Name</th>
+                    <th>Score</th>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
           </div>
           <div class="box stretchy">
             <table id="timestampsTable" class="fixed_header">
@@ -150,6 +164,12 @@
 
         socket.on("reload", function () {
           window.location.reload();
+        });
+
+        socket.on("teamstringJoin", function ([teamString]) {
+          console.log("Received teamstring: " + teamString);
+          $("#teams > tbody").remove();
+          $("#teams").append(teamString);
         });
       });
     </script>

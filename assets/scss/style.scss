@@ -32,7 +32,7 @@ h1 {
   font-weight: 100;
 }
 
-.maincontainer {
+div.maincontainer {
   display: flex;
   height: calc(100vh - #{$debugbar_height});
   width: 100vw;
@@ -43,7 +43,7 @@ h1 {
   justify-content: flex-start;
   align-items: stretch;
 
-  > .box {
+  > div.box {
     text-align: center;
     padding: 0;
     margin: 0;
@@ -61,7 +61,7 @@ h1 {
   }
 }
 
-.box {
+div.box {
   text-align: center;
   padding: 0;
   margin: 0;
@@ -78,7 +78,7 @@ h1 {
   }
 }
 
-.container {
+div.container {
   display: flex;
   height: 100%;
   width: 100%;
@@ -207,22 +207,63 @@ form input {
   align-items: center;
 }
 
-th,
-td {
-  &:nth-child(1) {
-    width: 5%;
+#timestampsTable {
+  & th,
+  & td {
+    &:nth-child(1) {
+      width: 5%;
+    }
+    &:nth-child(2) {
+      width: 25%;
+    }
+    &:nth-child(3) {
+      width: 20%;
+    }
+    &:nth-child(4) {
+      width: 25%;
+    }
+    &:nth-child(5) {
+      width: 25%;
+    }
   }
-  &:nth-child(2) {
-    width: 25%;
-  }
-  &:nth-child(3) {
-    width: 20%;
-  }
-  &:nth-child(4) {
-    width: 25%;
-  }
-  &:nth-child(5) {
-    width: 25%;
+}
+
+table {
+  &#teams {
+    border-collapse: collapse;
+
+    tbody {
+      border-top: 20px solid transparent;
+      border-bottom: 20px solid transparent;
+
+      &:nth-child(2) {
+        background-color: #dc322f;
+      }
+
+      &:nth-child(3) {
+        background-color: #859900;
+      }
+
+      &:nth-child(4) {
+        background-color: #08f7fe;
+      }
+    }
+
+    th,
+    td {
+      vertical-align: middle;
+      text-align: center;
+
+      &:nth-child(1) {
+        width: 15%;
+      }
+      &:nth-child(2) {
+        width: 50%;
+      }
+      &:nth-child(3) {
+        width: 30%;
+      }
+    }
   }
 }
 
@@ -235,14 +276,17 @@ tbody {
   overflow: auto;
 }
 
-td {
-  display: inline-block;
-  box-sizing: border-box;
-}
+table.fixed_header {
+  th,
+  td {
+    display: inline-block;
+    box-sizing: border-box;
+  }
 
-tr,
-tbody {
-  display: block;
+  tr,
+  tbody {
+    display: block;
+  }
 }
 
 span.glow {
