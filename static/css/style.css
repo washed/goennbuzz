@@ -174,11 +174,11 @@ table#teams {
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent; }
     table#teams tbody:nth-child(2) {
-      background-color: #b58900; }
+      background-color: #ffc000; }
     table#teams tbody:nth-child(3) {
-      background-color: #859900; }
+      background-color: #00b050; }
     table#teams tbody:nth-child(4) {
-      background-color: #268bd2; }
+      background-color: #00b0f0; }
   table#teams th,
   table#teams td {
     vertical-align: middle;
