@@ -15,8 +15,51 @@
 
       <div class="box stretchy">
         <div class="container reactive">
-          <div class="box red clickableHint" id="reset">
-            <p>RESET ALL</p>
+          <div class="box">
+            <div class="container">
+              <div class="box red clickableHint" id="reset">
+                <p>RESET ALL</p>
+              </div>
+              <div class="box">
+                <p>TEAMS</p>
+              </div>
+              <div class="box">
+                <form action="">
+                  <label for="f_team_count">Number of teams:</label>
+                  <input
+                    type="number"
+                    id="f_team_count"
+                    name="f_team_count"
+                  /><br />
+                  <label for="f_player_names">Player names:</label>
+                  <input
+                    type="text"
+                    id="f_player_names"
+                    name="f_player_names"
+                  /><br />
+                  <label for="f_team_scores">Scores:</label>
+                  <input
+                    type="text"
+                    id="f_team_scores"
+                    name="f_team_scores"
+                  /><br />
+                </form>
+              </div>
+              <div class="box blue clickableHint" id="update_teams">
+                <p>Update Scores!</p>
+              </div>
+              <div class="box red clickableHint" id="new_teams">
+                <p>New Teams!</p>
+              </div>
+              <table id="teams">
+                <thead>
+                  <th>Team #</th>
+                  <th>Name</th>
+                  <th>Score</th>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
           </div>
 
           <div class="box stretchy">
@@ -62,7 +105,107 @@
       setInterval(function () {
         var now = new Date(ts.now());
         $("#debugtime").text("now: " + now.toISOString() + " ms");
-      }, 20);
+      }, 500);
+
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      }
+
+      var nameArr = [];
+      var names = "";
+      var team_count = 0;
+      var team_string = "";
+      var ppl_per_team = [];
+
+      function shuffleTeams() {
+        team_count = $("#f_team_count").val();
+        names = $("#f_player_names").val();
+        nameArr = names
+          .split(",")
+          .map(Function.prototype.call, String.prototype.trim);
+
+        var ppl_count = nameArr.length;
+        var default_ppl_per_team = Math.round(ppl_count / team_count);
+        console.log("Base ppl_per_team: " + default_ppl_per_team);
+
+        // geklaut von: https://www.geeksforgeeks.org/split-the-number-into-n-parts-such-that-difference-between-the-smallest-and-the-largest-part-is-minimum/
+        // geht sich genau aus...
+        ppl_per_team = [];
+        if (ppl_count % team_count == 0) {
+          for (var i = 0; i < team_count; i++) {
+            ppl_per_team.push(default_ppl_per_team);
+          }
+        } else {
+          // upto n-(x % n) the values
+          // will be x / n
+          // after that the values
+          // will be x / n + 1
+          var zp = team_count - (ppl_count % team_count);
+          var pp = Math.floor(ppl_count / team_count);
+          for (var i = 0; i < team_count; i++) {
+            if (i >= zp) {
+              ppl_per_team.push(pp + 1);
+            } else {
+              ppl_per_team.push(pp);
+            }
+          }
+        }
+
+        console.log("People per team: " + ppl_per_team.toString());
+
+        shuffleArray(nameArr);
+        console.log("Shuffling: " + nameArr);
+
+        updateScores();
+      }
+
+      function updateScores() {
+        var scores = $("#f_team_scores").val();
+        var scoresArr = scores
+          .split(",")
+          .map(Function.prototype.call, String.prototype.trim);
+
+        let local_names = Array.from(nameArr);
+
+        team_string = "";
+        for (var i = 0; i < team_count; i++) {
+          team_string += "<tbody>";
+          team_string +=
+            "<tr><td rowspan='" + ppl_per_team[i] + "'>" + (i + 1) + "</td>";
+          for (var j = 0; j < ppl_per_team[i]; j++) {
+            var player = local_names.pop();
+
+            if (j == 0) {
+              team_string +=
+                "<td>" +
+                player +
+                "</td><td rowspan='" +
+                ppl_per_team[i] +
+                "'>" +
+                scoresArr[i] +
+                "</td></tr>";
+            } else {
+              team_string += "<tr><td>" + player + "</td></tr>";
+            }
+          }
+          team_string += "</tbody>";
+        }
+
+        // TODO: This should be a single emit, maybe use JSON
+        var socket = io();
+        socket.emit("teamstringNames", [names]);
+        socket.emit("teamstringTeamCount", [team_count]);
+        socket.emit("teamstringHost", [team_string]);
+      }
+
+      $("#new_teams").on("mousedown", shuffleTeams);
+      $("#new_teams").on("touchstart", shuffleTeams);
+
+      $("#update_teams").on("mousedown", updateScores);
+      $("#update_teams").on("touchstart", updateScores);
 
       $(function () {
         var socket = io();
@@ -119,6 +262,20 @@
 
         socket.on("reload", function () {
           window.location.reload();
+        });
+
+        socket.on("teamstringJoin", function ([teamString]) {
+          console.log("Received teamstring: " + teamString);
+          $("#teams > tbody").remove();
+          $("#teams").append(teamString);
+        });
+
+        socket.on("teamstringNamesHost", function ([TEAM_NAMES]) {
+          $("#f_player_names").val(TEAM_NAMES);
+        });
+
+        socket.on("teamstringTeamCountHost", function ([TEAM_COUNT]) {
+          $("#f_team_count").val(TEAM_COUNT);
         });
       });
     </script>

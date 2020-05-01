@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "sass:compile": "node-sass --include-path sass assets/scss/style.scss static/css/style.css"
+    "sass:compile": "node-sass -w --include-path sass assets/scss/style.scss static/css/style.css"
   },
   "devDependencies": {
     "node-sass": "^4.13.1"

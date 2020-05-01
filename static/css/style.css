@@ -17,7 +17,7 @@ h1 {
   font-size: 2em;
   font-weight: 100; }
 
-.maincontainer {
+div.maincontainer {
   display: flex;
   height: calc(100vh - 30px);
   width: 100vw;
@@ -26,7 +26,7 @@ h1 {
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch; }
-  .maincontainer > .box {
+  div.maincontainer > div.box {
     text-align: center;
     padding: 0;
     margin: 0;
@@ -34,10 +34,10 @@ h1 {
     display: flex;
     justify-content: center;
     flex: 0 1 auto; }
-    .maincontainer > .box.stretchy {
+    div.maincontainer > div.box.stretchy {
       flex: 1 1 auto; }
 
-.box {
+div.box {
   text-align: center;
   padding: 0;
   margin: 0;
@@ -45,10 +45,10 @@ h1 {
   display: flex;
   justify-content: center;
   flex: initial; }
-  .box.stretchy {
+  div.box.stretchy {
     flex: 1 1 auto; }
 
-.container {
+div.container {
   display: flex;
   height: 100%;
   width: 100%;
@@ -57,7 +57,7 @@ h1 {
   justify-content: space-around;
   align-items: center;
   align-content: center; }
-  .container.reactive {
+  div.container.reactive {
     display: flex;
     height: 100%;
     margin: 0;
@@ -65,14 +65,14 @@ h1 {
     justify-content: flex-start;
     align-items: flex-start; }
     @media (orientation: landscape) {
-      .container.reactive {
+      div.container.reactive {
         flex-direction: row; } }
     @media (orientation: portrait) {
-      .container.reactive {
+      div.container.reactive {
         flex-direction: column; } }
-  .container > .justify_center {
+  div.container > .justify_center {
     justify-content: center; }
-  .container > .align_start {
+  div.container > .align_start {
     align-items: flex-start; }
 
 .box-buzzer {
@@ -148,25 +148,50 @@ form input {
   justify-content: center;
   align-items: center; }
 
-th:nth-child(1),
-td:nth-child(1) {
+#timestampsTable th:nth-child(1),
+#timestampsTable td:nth-child(1) {
   width: 5%; }
 
-th:nth-child(2),
-td:nth-child(2) {
+#timestampsTable th:nth-child(2),
+#timestampsTable td:nth-child(2) {
   width: 25%; }
 
-th:nth-child(3),
-td:nth-child(3) {
+#timestampsTable th:nth-child(3),
+#timestampsTable td:nth-child(3) {
   width: 20%; }
 
-th:nth-child(4),
-td:nth-child(4) {
+#timestampsTable th:nth-child(4),
+#timestampsTable td:nth-child(4) {
   width: 25%; }
 
-th:nth-child(5),
-td:nth-child(5) {
+#timestampsTable th:nth-child(5),
+#timestampsTable td:nth-child(5) {
   width: 25%; }
+
+table#teams {
+  border-collapse: collapse; }
+  table#teams tbody {
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent; }
+    table#teams tbody:nth-child(2) {
+      background-color: #b58900; }
+    table#teams tbody:nth-child(3) {
+      background-color: #859900; }
+    table#teams tbody:nth-child(4) {
+      background-color: #268bd2; }
+  table#teams th,
+  table#teams td {
+    vertical-align: middle;
+    text-align: center; }
+    table#teams th:nth-child(1),
+    table#teams td:nth-child(1) {
+      width: 15%; }
+    table#teams th:nth-child(2),
+    table#teams td:nth-child(2) {
+      width: 50%; }
+    table#teams th:nth-child(3),
+    table#teams td:nth-child(3) {
+      width: 30%; }
 
 table {
   width: 100%; }
@@ -175,12 +200,13 @@ tbody {
   height: 100%;
   overflow: auto; }
 
-td {
+table.fixed_header th,
+table.fixed_header td {
   display: inline-block;
   box-sizing: border-box; }
 
-tr,
-tbody {
+table.fixed_header tr,
+table.fixed_header tbody {
   display: block; }
 
 span.glow {
