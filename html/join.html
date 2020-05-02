@@ -67,26 +67,26 @@
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="/timesync/timesync.js"></script>
     <script>
-      // create a timesync instance
-      var ts = timesync.create({
-        server: "/timesync",
-        interval: 1000,
-      });
-
-      ts.on("change", function (offset) {
-        $("#debugsync").text("tcorrection: " + offset.round(5) + " ms");
-      });
-
-      // get synchronized time
-      setInterval(function () {
-        var now = new Date(ts.now());
-        $("#debugtime").text("now: " + now.toISOString() + " ms");
-      }, 500);
-
       $(function () {
         var socket = io();
 
         var hasBuzzed = false;
+
+        // create a timesync instance
+        var ts = timesync.create({
+          server: "/timesync",
+          interval: 1000,
+        });
+
+        ts.on("change", function (offset) {
+          $("#debugsync").text("tcorrection: " + offset.round(5) + " ms");
+        });
+
+        // get synchronized time
+        setInterval(function () {
+          var now = new Date(ts.now());
+          $("#debugtime").text("now: " + now.toISOString() + " ms");
+        }, 500);
 
         function clearTimestampList() {
           $("#timestamps").empty();
