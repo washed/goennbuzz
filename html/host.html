@@ -131,13 +131,17 @@
           return glowy_string_html;
         }
 
-        $("#reset").on("click", resetHandler);
-
         socket.on("timestampList", function (serverTimestampList) {
+          console.log(
+            "HOST>fromserver: 'timestampList':" + serverTimestampList
+          );
+
           clearTimestampList();
 
           let index = 1;
           serverTimestampList.forEach((serverTimestamp) => {
+            console.log(serverTimestampList);
+
             const clientDate = new Date(serverTimestamp.clientTimestamp);
             $("#timestampsTable").append(
               "<tr><td>" +
@@ -189,9 +193,13 @@
           }
 
           // TODO: This should be a single emit, maybe use JSON
-          var socket = io();
+          console.log("HOST>toserver: 'teamstringNames':" + names);
           socket.emit("teamstringNames", [names]);
+
+          console.log("HOST>toserver: 'teamstringTeamCount':" + team_count);
           socket.emit("teamstringTeamCount", [team_count]);
+
+          console.log("HOST>toserver: 'teamstringHost':" + team_string);
           socket.emit("teamstringHost", [team_string]);
         }
 
@@ -217,7 +225,7 @@
 
           var ppl_count = nameArr.length;
           var default_ppl_per_team = Math.round(ppl_count / team_count);
-          console.log("Base ppl_per_team: " + default_ppl_per_team);
+          console.log("HOST>Base ppl_per_team: " + default_ppl_per_team);
 
           // geklaut von: https://www.geeksforgeeks.org/split-the-number-into-n-parts-such-that-difference-between-the-smallest-and-the-largest-part-is-minimum/
           // geht sich genau aus...
@@ -242,39 +250,45 @@
             }
           }
 
-          console.log("People per team: " + ppl_per_team.toString());
+          console.log("HOST>People per team: " + ppl_per_team.toString());
 
           shuffleArray(nameArr);
-          console.log("Shuffling: " + nameArr);
+          console.log("HOST>Shuffling: " + nameArr);
 
           updateScores();
         }
 
-        $("#new_teams").on("mousedown", shuffleTeams);
-        $("#new_teams").on("touchstart", shuffleTeams);
+        // Register button presses
+        $("#new_teams").on("click", shuffleTeams);
+        $("#update_teams").on("click", updateScores);
+        $("#reset").on("click", resetHandler);
 
-        $("#update_teams").on("mousedown", updateScores);
-        $("#update_teams").on("touchstart", updateScores);
-
+        // Register websocket callbacks
         socket.on("reset", function () {
+          console.log("HOST>fromserver: 'reset'");
           clearTimestampList();
         });
 
         socket.on("reload", function () {
+          console.log("HOST>fromserver: 'reload'");
           window.location.reload();
         });
 
         socket.on("teamstringJoin", function ([teamString]) {
-          console.log("Received teamstring: " + teamString);
+          console.log("HOST>fromserver: 'teamstringJoin': " + teamString);
           $("#teams > tbody").remove();
           $("#teams").append(teamString);
         });
 
         socket.on("teamstringNamesHost", function ([TEAM_NAMES]) {
+          console.log("HOST>fromserver: 'teamstringNamesHost': " + TEAM_NAMES);
           $("#f_player_names").val(TEAM_NAMES);
         });
 
         socket.on("teamstringTeamCountHost", function ([TEAM_COUNT]) {
+          console.log(
+            "HOST>fromserver: 'teamstringTeamCountHost': " + TEAM_COUNT
+          );
           $("#f_team_count").val(TEAM_COUNT);
         });
       });

@@ -57,16 +57,22 @@ io.on("connection", function (socket) {
   // handle user connect
   console.log("a user connected");
 
+  console.log("SERVER>toall: 'reset'");
   socket.emit("reset");
 
   // Send timestamps to the clients
+  console.log("SERVER>toall: 'timestampList':" + TIMESTAMPS);
   io.emit("timestampList", TIMESTAMPS);
 
   // Send teams to the clients
+  console.log("SERVER>toall: 'teamstringJoin':" + TEAM_STRING);
   io.emit("teamstringJoin", [TEAM_STRING]);
 
   // Send team builder inputs to the host on reconnect
+  console.log("SERVER>toall: 'teamstringNamesHost':" + TEAM_NAMES);
   io.emit("teamstringNamesHost", [TEAM_NAMES]);
+
+  console.log("SERVER>toall: 'teamstringTeamCountHost':" + TEAM_COUNT);
   io.emit("teamstringTeamCountHost", [TEAM_COUNT]);
 
   io.clients((error, clients) => {
@@ -82,6 +88,10 @@ io.on("connection", function (socket) {
 
 io.on("connection", function (socket) {
   socket.on("timestamp", function ([clientName, clientTimestamp]) {
+    console.log(
+      "SERVER>fromclient: 'timestamp':" + [clientName, clientTimestamp]
+    );
+
     const serverTimestamp = Date.now();
     TIMESTAMPS.push({
       clientName: clientName,
@@ -99,43 +109,54 @@ io.on("connection", function (socket) {
     });
 
     // Send timestamps to the clients
+    console.log("SERVER>toall: 'timestampList':" + TIMESTAMPS);
     io.emit("timestampList", TIMESTAMPS);
   });
 });
 
 io.on("connection", function (socket) {
   socket.on("teamstringHost", function ([teamstringHost]) {
+    console.log("SERVER>fromhost: 'teamstringHost':" + teamstringHost);
+
     TEAM_STRING = teamstringHost;
 
-    console.log("Received from host: " + teamstringHost);
-
     // Send the new teamString to the clients
+    console.log("SERVER>toall: 'teamstringJoin':" + TEAM_STRING);
     io.emit("teamstringJoin", [TEAM_STRING]);
   });
 
   socket.on("teamstringNames", function ([teamstringNames]) {
+    console.log("SERVER>fromhost: 'teamstringNames':" + teamstringNames);
+
     TEAM_NAMES = teamstringNames;
     console.log("Received from host: " + TEAM_NAMES);
 
+    console.log("SERVER>toall: 'teamstringNamesHost':" + TEAM_NAMES);
     io.emit("teamstringNamesHost", [TEAM_NAMES]);
   });
 
   socket.on("teamstringTeamCount", function ([teamstringTeamCount]) {
+    console.log(
+      "SERVER>fromhost: 'teamstringTeamCount':" + teamstringTeamCount
+    );
+
     TEAM_COUNT = teamstringTeamCount;
     console.log("Received from host: " + TEAM_COUNT);
 
+    console.log("SERVER>toall: 'teamstringTeamCountHost':" + TEAM_COUNT);
     io.emit("teamstringTeamCountHost", [TEAM_COUNT]);
   });
 });
 
 io.on("connection", function (socket) {
   socket.on("reset", function () {
+    console.log("SERVER>fromhost: 'reset'");
+
     TIMESTAMPS = [];
 
     // Reset the clients
+    console.log("SERVER>toall: 'reset'");
     io.emit("reset");
-
-    console.log("RESET!");
   });
 });
 
