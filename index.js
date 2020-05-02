@@ -102,7 +102,7 @@ io.on("connection", function (socket) {
 
     TIMESTAMPS.sort(compareTimestamps);
 
-    // populateOffsets(TIMESTAMPS);
+    populateOffsets(TIMESTAMPS);
 
     TIMESTAMPS.forEach((timestamp) => {
       console.log(timestamp);
