@@ -118,7 +118,7 @@
             var now = new Date(ts.now());
             var tsPaylod = [$("#fname").val(), now.valueOf()];
             console.log("JOIN>toserver: 'timestamp':" + tsPaylod);
-            socket.emit("timestamp", [tsPaylod]);
+            socket.emit("timestamp", tsPaylod);
           }
           return false;
         }
