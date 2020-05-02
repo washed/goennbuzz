@@ -162,6 +162,16 @@
 
         function updateScores() {
           var scores = $("#f_team_scores").val();
+
+          if (scores == "") {
+            // This is incredible stupid, but hey, it works :(
+            // TODO: This should really go away once we actually have sensible objects
+            // backing up this data like sane people
+            let initial_scores = new Array(team_count).fill(0);
+            $("#f_team_scores").val(initial_scores.join(","));
+            scores = $("#f_team_scores").val();
+          }
+
           var scoresArr = scores
             .split(",")
             .map(Function.prototype.call, String.prototype.trim);
