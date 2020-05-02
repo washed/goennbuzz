@@ -44,24 +44,13 @@ function compareTimestamps(a, b) {
 
 function populateOffsets(timestampList) {
   if (Array.isArray(timestampList) && timestampList.length) {
-    newTimestampList = [];
-
     // Has to be sorted first!
     const firstTimestamp = timestampList[0].clientTimestamp;
 
     timestampList.forEach((timestamp) => {
-      let ts_offset = timestamp.clientTimestamp - firstTimestamp;
-
-      newTimestampList.push({
-        clientName: timestamp.clientName,
-        clientTimestamp: timestamp.clientTimestamp,
-        serverTimestamp: timestamp.serverTimestamp,
-        offset: ts_offset,
-      });
+      timestamp.offset = timestamp.clientTimestamp - firstTimestamp;
     });
   }
-
-  return newTimestampList;
 }
 
 io.on("connection", function (socket) {
@@ -113,7 +102,7 @@ io.on("connection", function (socket) {
 
     TIMESTAMPS.sort(compareTimestamps);
 
-    TIMESTAMPS = populateOffsets(TIMESTAMPS);
+    // populateOffsets(TIMESTAMPS);
 
     TIMESTAMPS.forEach((timestamp) => {
       console.log(timestamp);
