@@ -67,26 +67,26 @@
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="/timesync/timesync.js"></script>
     <script>
-      // create a timesync instance
-      var ts = timesync.create({
-        server: "/timesync",
-        interval: 1000,
-      });
-
-      ts.on("change", function (offset) {
-        $("#debugsync").text("tcorrection: " + offset.round(5) + " ms");
-      });
-
-      // get synchronized time
-      setInterval(function () {
-        var now = new Date(ts.now());
-        $("#debugtime").text("now: " + now.toISOString() + " ms");
-      }, 500);
-
       $(function () {
         var socket = io();
 
         var hasBuzzed = false;
+
+        // create a timesync instance
+        var ts = timesync.create({
+          server: "/timesync",
+          interval: 1000,
+        });
+
+        ts.on("change", function (offset) {
+          $("#debugsync").text("tcorrection: " + offset.round(5) + " ms");
+        });
+
+        // get synchronized time
+        setInterval(function () {
+          var now = new Date(ts.now());
+          $("#debugtime").text("now: " + now.toISOString() + " ms");
+        }, 50);
 
         function clearTimestampList() {
           $("#timestamps").empty();
@@ -116,7 +116,9 @@
           if (!hasBuzzed) {
             setBuzzerState(true);
             var now = new Date(ts.now());
-            socket.emit("timestamp", [$("#fname").val(), now.valueOf()]);
+            var tsPaylod = [$("#fname").val(), now.valueOf()];
+            console.log("JOIN>toserver: 'timestamp':" + tsPaylod);
+            socket.emit("timestamp", tsPaylod);
           }
           return false;
         }
@@ -136,6 +138,10 @@
         $("#buzzer").on("touchstart", buzzerHandler);
 
         socket.on("timestampList", function (serverTimestampList) {
+          console.log(
+            "JOIN>fromserver: 'timestampList':" + serverTimestampList
+          );
+
           clearTimestampList();
 
           let index = 1;
@@ -159,14 +165,17 @@
         });
 
         socket.on("reset", function () {
+          console.log("JOIN>fromserver: 'reset'");
           setBuzzerState(false);
         });
 
         socket.on("reload", function () {
+          console.log("JOIN>fromserver: 'reload'");
           window.location.reload();
         });
 
         socket.on("teamstringJoin", function ([teamString]) {
+          console.log("JOIN>fromserver: 'teamstringJoin':" + teamString);
           $("#teams > tbody").remove();
           $("#teams").append(teamString);
         });
