@@ -1,5 +1,4 @@
 <script>
-    import successkid from "images/successkid.jpg";
     import io from "socket.io-client";
     import Button, { Label } from "@smui/button";
     import IconButton, { Icon } from "@smui/icon-button";

@@ -1,5 +1,5 @@
 {
-  "name": "TODO",
+  "name": "goennbuzz",
   "description": "TODO",
   "version": "0.0.1",
   "scripts": {
@@ -13,8 +13,7 @@
     "polka": "^0.5.0",
     "sirv": "^1.0.0",
     "socket.io": "^3.0.5",
-    "socket.io-client": "^3.0.5",
-    "timesync": "^1.0.8"
+    "socket.io-client": "^3.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
@@ -35,7 +34,6 @@
     "sapper": "^0.28.0",
     "svelte": "^3.17.3",
     "svelte-material-ui": "^2.0.0-beta.0",
-    "timesync": "^1.0.8",
     "uuid": "^8.3.2"
   }
 }
