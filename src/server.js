@@ -51,7 +51,7 @@ function buzzHandler(socket, payload) {
   console.log("SERVER <<< buzz", payload);
   let serverTimestamp = Date.now();
   timestamps.push({
-    clientName: payload.client,
+    clientName: payload.client.name,
     clientTimestamp: payload.timestamp,
     serverTimestamp: serverTimestamp,
     offset: 0,
@@ -77,21 +77,34 @@ function resetHandler(socket) {
   broadcastTimestamps(socket);
 }
 
-var clients = [];
+var clients = {};
+
+function sendClients(socket) {
+  console.log("SERVER >>> sendClients", clients);
+  socket.emit("sendClients", clients);
+  socket.broadcast.emit("sendClients", clients);
+}
 
 function registerRequestHandler(socket) {
   let newClient = {
     id: uuidv4(),
     name: "",
   };
-  clients.push(newClient);
   console.log("SERVER >>> registerResponse", newClient);
   socket.emit("registerResponse", newClient);
+  registerUpdateHandler(socket, newClient);
+}
+
+function registerUpdateHandler(socket, registerUpdate) {
+  console.log("SERVER <<< registerUpdate", registerUpdate);
+  clients[registerUpdate.id] = registerUpdate;
+  sendClients(socket);
 }
 
 ioServer.on("connection", (socket) => {
-  emitReset(socket);
+  // emitReset(socket);
   emitTimestamps(socket);
+  sendClients(socket);
 
   socket.on("buzz", function (payload) {
     buzzHandler(socket, payload);
@@ -104,6 +117,10 @@ ioServer.on("connection", (socket) => {
   socket.on("registerRequest", function () {
     console.log("SERVER <<< registerRequest");
     registerRequestHandler(socket);
+  });
+
+  socket.on("registerUpdate", function (registerUpdate) {
+    registerUpdateHandler(socket, registerUpdate);
   });
 });
 

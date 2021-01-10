@@ -4,16 +4,14 @@
     import IconButton, { Icon } from "@smui/icon-button";
     import Textfield from "@smui/textfield";
     import DataTable, { Head, Body, Row, Cell } from "@smui/data-table";
+    import ClientTable from "../components/ClientTable.svelte";
+    import BuzzerTable from "../components/BuzzerTable.svelte";
+    import { client } from "../stores.js";
 
     let socket = io();
 
-    var hasBuzzed = false;
     let timestamps = [];
-    let nameLocked = false;
-    let client = {
-        id: null,
-        name: "",
-    };
+    let clients = {};
 
     function clearTimestampList() {
         timestamps = [];
@@ -21,10 +19,10 @@
 
     function setBuzzerState(state) {
         if (state === true) {
-            hasBuzzed = true;
+            $client.hasBuzzed = true;
         } else if (state === false) {
             clearTimestampList();
-            hasBuzzed = false;
+            $client.hasBuzzed = false;
         }
     }
 
@@ -37,10 +35,10 @@
     };
 
     function buzzerHandler() {
-        if (!hasBuzzed) {
+        if (!$client.hasBuzzed) {
             setBuzzerState(true);
             let tsPaylod = {
-                client: name,
+                client: $client,
                 timestamp: Date.now(),
             };
             console.log("JOIN >>> buzz", tsPaylod);
@@ -69,71 +67,70 @@
         setBuzzerState(false);
     });
 
-    function registerResponseHandler(client) {
-        console.log("JOIN <<< registerResponse", client);
+    function registerResponseHandler(registerResponse) {
+        console.log("JOIN <<< registerResponse", registerResponse);
+        client.set(registerResponse);
     }
 
-    socket.on("registerResponse", function (client) {
-        registerResponseHandler(client);
+    socket.on("registerResponse", function (registerResponse) {
+        registerResponseHandler(registerResponse);
     });
 
-    function updateClient() {}
+    socket.on("sendClients", function (sendClients) {
+        console.log("JOIN <<< sendClients", sendClients);
+        clients = sendClients;
+    });
 
-    console.log("JOIN >>> registerRequest");
-    socket.emit("registerRequest");
+    function updateClient() {
+        console.log("JOIN >>> registerUpdate");
+        socket.emit("registerUpdate", $client);
+    }
+
+    if ($client === null) {
+        console.log("JOIN >>> registerRequest");
+        socket.emit("registerRequest");
+    }
 </script>
 
 <svelte:head>
-    <title>Sapper project template</title>
+    <title>Goennbuzz - Join</title>
 </svelte:head>
 
-{#if nameLocked}
-    <h1>Goennbuzz/Join - Oh hi {client.name}!</h1>
-{:else}
-    <h1>Goennbuzz/Join</h1>
-{/if}
-
-<div>
-    {#if !nameLocked}
-        <Textfield bind:value={client.name} label="Name" />
-        <IconButton class="material-icons" toggle bind:pressed={nameLocked}>
-            check
-        </IconButton>
+{#if typeof $client !== 'undefined'}
+    {#if $client.nameLocked}
+        <h1>Goennbuzz/Join - Oh hi {$client.name}!</h1>
     {:else}
-        <Label>{client.name}</Label>
-        <IconButton class="material-icons" toggle bind:pressed={nameLocked}>
-            edit
-        </IconButton>
+        <h1>Goennbuzz/Join</h1>
     {/if}
-</div>
-<div>
-    {#if nameLocked}
-        <Button on:click={buzzerHandler}>
-            <Label>BUZZ</Label>
-        </Button>
-    {:else}
-        <p>Enter your name first!</p>
-    {/if}
-</div>
-{#if timestamps.length}
-    <DataTable table$aria-label="Buzzes">
-        <Head>
-            <Row>
-                <Cell>Name</Cell>
-                <Cell>Time</Cell>
-                <Cell>t+</Cell>
-            </Row>
-        </Head>
-        <Body>
-            {#each timestamps as timestamp}
-                <Row>
-                    <Cell>{timestamp.clientName}</Cell>
-                    <Cell numeric>{timestamp.serverTimestamp}</Cell>
-                    <Cell numeric>{timestamp.offset}</Cell>
-                </Row>
-            {/each}
-        </Body>
-    </DataTable>
-{:else}
-    <p>Waiting for buzzing...</p>
+    <div>
+        {#if !$client.nameLocked}
+            <Textfield bind:value={$client.name} label="Name" />
+            <IconButton
+                class="material-icons"
+                toggle
+                bind:pressed={$client.nameLocked}
+                on:click={updateClient}>
+                check
+            </IconButton>
+        {:else}
+            <Label>{$client.name}</Label>
+            <IconButton
+                class="material-icons"
+                toggle
+                bind:pressed={$client.nameLocked}>
+                edit
+            </IconButton>
+        {/if}
+    </div>
+    <div>
+        {#if $client.nameLocked}
+            <Button on:click={buzzerHandler}>
+                <Label>BUZZ</Label>
+            </Button>
+        {:else}
+            <p>Enter your name first!</p>
+        {/if}
+    </div>
+    <BuzzerTable {timestamps} />
+    <ClientTable {clients} />
 {/if}

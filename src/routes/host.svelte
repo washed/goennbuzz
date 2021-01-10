@@ -2,6 +2,9 @@
     import io from "socket.io-client";
     import Button, { Label } from "@smui/button";
     import DataTable, { Head, Body, Row, Cell } from "@smui/data-table";
+    import ClientTable from "../components/ClientTable.svelte";
+    import BuzzerTable from "../components/BuzzerTable.svelte";
+    import { client } from "../stores.js";
 
     let socket = io();
 
@@ -27,6 +30,34 @@
         console.log("HOST <<< timestampList", serverTimestamps);
         timestamps = serverTimestamps;
     });
+
+    let clients = {};
+
+    function registerResponseHandler(registerResponse) {
+        console.log("JOIN <<< registerResponse", registerResponse);
+        client.set(registerResponse);
+    }
+
+    socket.on("registerResponse", function (registerResponse) {
+        registerResponseHandler(registerResponse);
+    });
+
+    socket.on("sendClients", function (sendClients) {
+        console.log("JOIN <<< sendClients", sendClients);
+        clients = sendClients;
+    });
+
+    function updateClient() {
+        console.log("JOIN >>> registerUpdate");
+        socket.emit("registerUpdate", $client);
+    }
+
+    if ($client === null) {
+        console.log("JOIN >>> registerRequest");
+        socket.emit("registerRequest");
+    } else {
+        updateClient();
+    }
 
     /*
 
@@ -179,32 +210,12 @@
 </script>
 
 <svelte:head>
-    <title>Sapper project template</title>
+    <title>Goennbuzz - Host</title>
 </svelte:head>
 
 <h1>Goennbuzz - Host!</h1>
 <Button on:click={resetButtonHandler}>
     <Label>RESET</Label>
 </Button>
-{#if timestamps.length}
-    <DataTable table$aria-label="Buzzes">
-        <Head>
-            <Row>
-                <Cell>Name</Cell>
-                <Cell>Time</Cell>
-                <Cell>t+</Cell>
-            </Row>
-        </Head>
-        <Body>
-            {#each timestamps as timestamp}
-                <Row>
-                    <Cell>{timestamp.clientName}</Cell>
-                    <Cell numeric>{timestamp.serverTimestamp}</Cell>
-                    <Cell numeric>{timestamp.offset}</Cell>
-                </Row>
-            {/each}
-        </Body>
-    </DataTable>
-{:else}
-    <p>Waiting for buzzing...</p>
-{/if}
+<BuzzerTable {timestamps} />
+<ClientTable {clients} />
