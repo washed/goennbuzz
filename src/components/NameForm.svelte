@@ -4,8 +4,10 @@
     import { client, socket, role } from "../stores.js";
 
     $: (() => {
-        console.debug(`${$role} >>> registerUpdate`, $client);
-        $socket.emit("registerUpdate", $client);
+        if (typeof $client !== "undefined" && $client != null) {
+            console.debug(`${$role} >>> registerUpdate`, $client);
+            $socket.emit("registerUpdate", $client);
+        }
     })();
 </script>
 
