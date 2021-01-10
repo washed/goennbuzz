@@ -1,5 +1,5 @@
 <script>
-    import IconButton, { Icon } from "@smui/icon-button";
+    import Button, { Label } from "@smui/button";
     import { client } from "../stores.js";
     export let socket;
 
@@ -24,14 +24,16 @@
     }
 </style>-->
 
-{#if $client.nameLocked}
-    <IconButton on:click={buzzerHandler} class="touch" color="primary">
-        {#if !$client.hasBuzzed}
-            <Icon class="material-icons">star</Icon>
-        {:else}
-            <Icon class="material-icons">star_border</Icon>
-        {/if}
-    </IconButton>
-{:else}
-    <p>Enter your name first!</p>
-{/if}
+<div>
+    {#if $client.nameLocked}
+        <Button on:click={buzzerHandler}>
+            {#if !$client.hasBuzzed}
+                <Label>BUZZ</Label>
+            {:else}
+                <Label>BUZZED</Label>
+            {/if}
+        </Button>
+    {:else}
+        <p>Lock in your name first! (You can change it anytime)</p>
+    {/if}
+</div>
