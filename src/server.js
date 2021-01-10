@@ -4,7 +4,7 @@ import compression from "compression";
 import * as sapper from "@sapper/server";
 import http from "http";
 import io from "socket.io";
-import { v4 as uuidv4 } from "uuid";
+import { generate as shortUuidGenerate } from "short-uuid";
 
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === "development";
@@ -12,8 +12,6 @@ const dev = NODE_ENV === "development";
 const server = http.createServer();
 
 polka({ server })
-  // .use("/timesync", timesync.requestHandler)
-  // .use("/timesync", timesyncRequestHandler)
   .use(
     compression({ threshold: 0 }),
     sirv("static", { dev }),
@@ -95,7 +93,7 @@ function pingHandler(id) {
 
 function registerRequestHandler(socket) {
   let newClient = {
-    id: uuidv4(),
+    id: shortUuidGenerate(),
     name: "",
   };
   console.debug("SERVER >>> registerResponse", newClient);

@@ -1,7 +1,7 @@
 <script>
     import DataTable, { Head, Body, Row, Cell } from "@smui/data-table";
 
-    export let controls;
+    // export let controls;
     export let clients;
 </script>
 

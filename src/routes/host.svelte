@@ -1,7 +1,6 @@
 <script>
     import io from "socket.io-client";
     import Button, { Label } from "@smui/button";
-    import DataTable, { Head, Body, Row, Cell } from "@smui/data-table";
     import ClientTable from "../components/ClientTable.svelte";
     import BuzzerTable from "../components/BuzzerTable.svelte";
     import { client } from "../stores.js";

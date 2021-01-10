@@ -1,30 +1,16 @@
 <script>
     import io from "socket.io-client";
-    import Button, { Label } from "@smui/button";
     import IconButton, { Icon } from "@smui/icon-button";
-    import Textfield from "@smui/textfield";
-    import DataTable, { Head, Body, Row, Cell } from "@smui/data-table";
+    import NameForm from "../components/NameForm.svelte";
     import ClientTable from "../components/ClientTable.svelte";
     import BuzzerTable from "../components/BuzzerTable.svelte";
+    import BuzzerButton from "../components/BuzzerButton.svelte";
     import { client } from "../stores.js";
 
     let socket = io();
 
     let timestamps = [];
     let clients = {};
-
-    function clearTimestampList() {
-        timestamps = [];
-    }
-
-    function setBuzzerState(state) {
-        if (state === true) {
-            $client.hasBuzzed = true;
-        } else if (state === false) {
-            clearTimestampList();
-            $client.hasBuzzed = false;
-        }
-    }
 
     Number.prototype.round = function (places) {
         var precision_factor = Math.pow(10, places) / 10;
@@ -33,18 +19,6 @@
             precision_factor
         );
     };
-
-    function buzzerHandler() {
-        if (!$client.hasBuzzed) {
-            setBuzzerState(true);
-            let tsPaylod = {
-                client: $client,
-                timestamp: Date.now(),
-            };
-            console.debug("JOIN >>> buzz", tsPaylod);
-            socket.emit("buzz", tsPaylod);
-        }
-    }
 
     function make_it_glow_bitch(str) {
         var glowy_string_html = "<div>";
@@ -64,7 +38,7 @@
 
     socket.on("reset", function () {
         console.debug("JOIN <<< reset");
-        setBuzzerState(false);
+        $client.hasBuzzed = false;
     });
 
     function registerResponseHandler(registerResponse) {
@@ -91,11 +65,6 @@
         pong(id);
     });
 
-    function updateClient() {
-        console.debug("JOIN >>> registerUpdate");
-        socket.emit("registerUpdate", $client);
-    }
-
     if ($client === null) {
         console.debug("JOIN >>> registerRequest");
         socket.emit("registerRequest");
@@ -112,35 +81,8 @@
     {:else}
         <h1>Goennbuzz/Join</h1>
     {/if}
-    <div>
-        {#if !$client.nameLocked}
-            <Textfield bind:value={$client.name} label="Name" />
-            <IconButton
-                class="material-icons"
-                toggle
-                bind:pressed={$client.nameLocked}
-                on:click={updateClient}>
-                check
-            </IconButton>
-        {:else}
-            <Label>{$client.name}</Label>
-            <IconButton
-                class="material-icons"
-                toggle
-                bind:pressed={$client.nameLocked}>
-                edit
-            </IconButton>
-        {/if}
-    </div>
-    <div>
-        {#if $client.nameLocked}
-            <Button on:click={buzzerHandler}>
-                <Label>BUZZ</Label>
-            </Button>
-        {:else}
-            <p>Enter your name first!</p>
-        {/if}
-    </div>
+    <NameForm {socket} />
+    <BuzzerButton {socket} />
     <BuzzerTable {timestamps} />
     <ClientTable {clients} />
 {/if}
