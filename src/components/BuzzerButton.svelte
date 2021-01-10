@@ -1,7 +1,6 @@
 <script>
     import Button, { Label } from "@smui/button";
-    import { client } from "../stores.js";
-    export let socket;
+    import { client, role, socket } from "../stores.js";
 
     function buzzerHandler() {
         if (!$client.hasBuzzed) {
@@ -10,19 +9,11 @@
                 client: $client,
                 timestamp: Date.now(),
             };
-            console.debug("JOIN >>> buzz", tsPaylod);
-            socket.emit("buzz", tsPaylod);
+            console.debug(`${$role} >>> buzz`, tsPaylod);
+            $socket.emit("buzz", tsPaylod);
         }
     }
 </script>
-
-<!--<style lang="scss" global>
-    // TODO: Get this stupid theming stuff to work
-    @import "@smui/icon-button/_index.scss";
-    .mdc-button {
-        @include height(128);
-    }
-</style>-->
 
 <div>
     {#if $client.nameLocked}

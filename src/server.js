@@ -5,6 +5,7 @@ import * as sapper from "@sapper/server";
 import http from "http";
 import io from "socket.io";
 import { generate as shortUuidGenerate } from "short-uuid";
+import _ from "lodash";
 
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === "development";
@@ -78,38 +79,75 @@ function resetHandler(socket) {
 var clients = {};
 
 function sendClients(socket) {
-  console.debug("SERVER >>> sendClients", clients);
-  socket.emit("sendClients", clients);
-  socket.broadcast.emit("sendClients", clients);
+  var clientsToSend = {};
+  for (const [key, value] of Object.entries(clients)) {
+    clientsToSend[key] = _.omit(value, ["serverPrivate"]);
+  }
+  console.debug("SERVER >>> sendClients", clientsToSend);
+  socket.emit("sendClients", clientsToSend);
+  socket.broadcast.emit("sendClients", clientsToSend);
+}
+
+function startPinging(id) {
+  clients[id].serverPrivate.pingInterval = setInterval(() => {
+    console.debug("SERVER >>> ping", id);
+
+    let lastPongDelta =
+      Date.now() - (clients[id].serverPrivate.lastPong || Date.now());
+    if (lastPongDelta > 5000) {
+      console.log("Client has timed out!", id);
+      stopPinging(id);
+      delete clients[id];
+      return;
+    }
+
+    clients[id].serverPrivate.lastPing = Date.now();
+    clients[id].serverPrivate.socket.emit("ping", id);
+  }, 1000);
+}
+
+function stopPinging(id) {
+  clearInterval(clients[id].serverPrivate.pingInterval);
 }
 
 function pingHandler(id) {
-  setInterval(() => {
-    console.debug("SERVER >>> ping", id);
-    clients[id]["lastPing"] = Date.now();
-    ioServer.emit("ping", id);
-  }, 1000);
+  if (typeof clients[id].serverPrivate.pingInterval === "undefined") {
+    startPinging(id);
+  } else {
+    stopPinging(id);
+    startPinging(id);
+  }
 }
 
 function registerRequestHandler(socket) {
   let newClient = {
     id: shortUuidGenerate(),
     name: "",
+    serverPrivate: {},
   };
   console.debug("SERVER >>> registerResponse", newClient);
   socket.emit("registerResponse", newClient);
-
   registerUpdateHandler(socket, newClient);
 }
 
 function registerUpdateHandler(socket, registerUpdate) {
   console.debug("SERVER <<< registerUpdate", registerUpdate);
-  clients[registerUpdate.id] = registerUpdate;
+  if (typeof clients[registerUpdate.id] === "undefined")
+    clients[registerUpdate.id] = registerUpdate;
+  _.merge(clients[registerUpdate.id], {
+    ...registerUpdate,
+    serverPrivate: {
+      socket: socket,
+      lastPing: null,
+      lastPong: null,
+    },
+  });
   pingHandler(registerUpdate.id);
   sendClients(socket);
 }
 
 ioServer.on("connection", (socket) => {
+  console.log("Client connected");
   // emitReset(socket);
   emitTimestamps(socket);
   sendClients(socket);
@@ -134,8 +172,20 @@ ioServer.on("connection", (socket) => {
   socket.on("pong", function (id) {
     console.debug("SERVER <<< pong", id);
     let now = Date.now();
-    clients[id]["latency"] = (now - clients[id]["lastPing"]) / 2;
+    clients[id].serverPrivate.lastPong = now;
+    clients[id].latency =
+      (clients[id].serverPrivate.lastPong -
+        clients[id].serverPrivate.lastPing) /
+      2;
     sendClients(socket);
+  });
+
+  socket.on("disconnecting", () => {
+    console.log("SERVER <<< disconnecting");
+  });
+
+  socket.on("disconnect", () => {
+    console.log("SERVER <<< disconnect");
   });
 });
 
