@@ -81,6 +81,16 @@
         clients = sendClients;
     });
 
+    function pong(id) {
+        console.log("JOIN >>> pong", id);
+        socket.emit("pong", id);
+    }
+
+    socket.on("ping", function (id) {
+        console.log("JOIN <<< ping", id);
+        pong(id);
+    });
+
     function updateClient() {
         console.log("JOIN >>> registerUpdate");
         socket.emit("registerUpdate", $client);

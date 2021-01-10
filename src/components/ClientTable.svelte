@@ -11,6 +11,7 @@
         <Row>
             <Cell>Name</Cell>
             <Cell>ID</Cell>
+            <Cell>Latency</Cell>
         </Row>
     </Head>
     <Body>
@@ -18,6 +19,7 @@
             <Row>
                 <Cell>{client.name}</Cell>
                 <Cell>{client.id}</Cell>
+                <Cell>{client.latency}</Cell>
             </Row>
         {/each}
     </Body>

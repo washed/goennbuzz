@@ -85,6 +85,14 @@ function sendClients(socket) {
   socket.broadcast.emit("sendClients", clients);
 }
 
+function pingHandler(id) {
+  setInterval(() => {
+    console.log("SERVER >>> ping", id);
+    clients[id]["lastPing"] = Date.now();
+    ioServer.emit("ping", id);
+  }, 1000);
+}
+
 function registerRequestHandler(socket) {
   let newClient = {
     id: uuidv4(),
@@ -92,12 +100,14 @@ function registerRequestHandler(socket) {
   };
   console.log("SERVER >>> registerResponse", newClient);
   socket.emit("registerResponse", newClient);
+
   registerUpdateHandler(socket, newClient);
 }
 
 function registerUpdateHandler(socket, registerUpdate) {
   console.log("SERVER <<< registerUpdate", registerUpdate);
   clients[registerUpdate.id] = registerUpdate;
+  pingHandler(registerUpdate.id);
   sendClients(socket);
 }
 
@@ -121,6 +131,13 @@ ioServer.on("connection", (socket) => {
 
   socket.on("registerUpdate", function (registerUpdate) {
     registerUpdateHandler(socket, registerUpdate);
+  });
+
+  socket.on("pong", function (id) {
+    console.log("SERVER <<< pong", id);
+    let now = Date.now();
+    clients[id]["latency"] = (now - clients[id]["lastPing"]) / 2;
+    sendClients(socket);
   });
 });
 
