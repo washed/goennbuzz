@@ -11,7 +11,7 @@
     $: timestamps = [];
 
     function resetButtonHandler() {
-        console.log("HOST >>> reset");
+        console.debug("HOST >>> reset");
         socket.emit("reset");
     }
 
@@ -27,14 +27,14 @@
     }
 
     socket.on("timestampList", function (serverTimestamps) {
-        console.log("HOST <<< timestampList", serverTimestamps);
+        console.debug("HOST <<< timestampList", serverTimestamps);
         timestamps = serverTimestamps;
     });
 
     let clients = {};
 
     function registerResponseHandler(registerResponse) {
-        console.log("JOIN <<< registerResponse", registerResponse);
+        console.debug("JOIN <<< registerResponse", registerResponse);
         client.set(registerResponse);
     }
 
@@ -43,17 +43,17 @@
     });
 
     socket.on("sendClients", function (sendClients) {
-        console.log("JOIN <<< sendClients", sendClients);
+        console.debug("JOIN <<< sendClients", sendClients);
         clients = sendClients;
     });
 
     function updateClient() {
-        console.log("JOIN >>> registerUpdate");
+        console.debug("JOIN >>> registerUpdate");
         socket.emit("registerUpdate", $client);
     }
 
     if ($client === null) {
-        console.log("JOIN >>> registerRequest");
+        console.debug("JOIN >>> registerRequest");
         socket.emit("registerRequest");
     } else {
         updateClient();

@@ -41,7 +41,7 @@
                 client: $client,
                 timestamp: Date.now(),
             };
-            console.log("JOIN >>> buzz", tsPaylod);
+            console.debug("JOIN >>> buzz", tsPaylod);
             socket.emit("buzz", tsPaylod);
         }
     }
@@ -58,17 +58,17 @@
     }
 
     socket.on("timestampList", function (serverTimestampList) {
-        console.log("JOIN <<< timestampList", serverTimestampList);
+        console.debug("JOIN <<< timestampList", serverTimestampList);
         timestamps = serverTimestampList;
     });
 
     socket.on("reset", function () {
-        console.log("JOIN <<< reset");
+        console.debug("JOIN <<< reset");
         setBuzzerState(false);
     });
 
     function registerResponseHandler(registerResponse) {
-        console.log("JOIN <<< registerResponse", registerResponse);
+        console.debug("JOIN <<< registerResponse", registerResponse);
         client.set(registerResponse);
     }
 
@@ -77,27 +77,27 @@
     });
 
     socket.on("sendClients", function (sendClients) {
-        console.log("JOIN <<< sendClients", sendClients);
+        console.debug("JOIN <<< sendClients", sendClients);
         clients = sendClients;
     });
 
     function pong(id) {
-        console.log("JOIN >>> pong", id);
+        console.debug("JOIN >>> pong", id);
         socket.emit("pong", id);
     }
 
     socket.on("ping", function (id) {
-        console.log("JOIN <<< ping", id);
+        console.debug("JOIN <<< ping", id);
         pong(id);
     });
 
     function updateClient() {
-        console.log("JOIN >>> registerUpdate");
+        console.debug("JOIN >>> registerUpdate");
         socket.emit("registerUpdate", $client);
     }
 
     if ($client === null) {
-        console.log("JOIN >>> registerRequest");
+        console.debug("JOIN >>> registerRequest");
         socket.emit("registerRequest");
     }
 </script>

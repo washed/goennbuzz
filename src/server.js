@@ -28,27 +28,27 @@ let ioServer = io(server);
 var timestamps = [];
 
 function emitReset(socket) {
-  console.log("SERVER >>> reset");
+  console.debug("SERVER >>> reset");
   socket.emit("reset");
 }
 
 function broadcastReset(socket) {
-  console.log("SERVER >>> reset");
+  console.debug("SERVER >>> reset");
   socket.broadcast.emit("reset");
 }
 
 function emitTimestamps(socket) {
-  console.log("SERVER >>> timestampList", timestamps);
+  console.debug("SERVER >>> timestampList", timestamps);
   socket.emit("timestampList", timestamps);
 }
 
 function broadcastTimestamps(socket) {
-  console.log("SERVER >>> timestampList", timestamps);
+  console.debug("SERVER >>> timestampList", timestamps);
   socket.broadcast.emit("timestampList", timestamps);
 }
 
 function buzzHandler(socket, payload) {
-  console.log("SERVER <<< buzz", payload);
+  console.debug("SERVER <<< buzz", payload);
   let serverTimestamp = Date.now();
   timestamps.push({
     clientName: payload.client.name,
@@ -65,7 +65,7 @@ function buzzHandler(socket, payload) {
 }
 
 function resetHandler(socket) {
-  console.log("SERVER <<< reset");
+  console.debug("SERVER <<< reset");
   timestamps = [];
 
   // talk to host
@@ -80,14 +80,14 @@ function resetHandler(socket) {
 var clients = {};
 
 function sendClients(socket) {
-  console.log("SERVER >>> sendClients", clients);
+  console.debug("SERVER >>> sendClients", clients);
   socket.emit("sendClients", clients);
   socket.broadcast.emit("sendClients", clients);
 }
 
 function pingHandler(id) {
   setInterval(() => {
-    console.log("SERVER >>> ping", id);
+    console.debug("SERVER >>> ping", id);
     clients[id]["lastPing"] = Date.now();
     ioServer.emit("ping", id);
   }, 1000);
@@ -98,14 +98,14 @@ function registerRequestHandler(socket) {
     id: uuidv4(),
     name: "",
   };
-  console.log("SERVER >>> registerResponse", newClient);
+  console.debug("SERVER >>> registerResponse", newClient);
   socket.emit("registerResponse", newClient);
 
   registerUpdateHandler(socket, newClient);
 }
 
 function registerUpdateHandler(socket, registerUpdate) {
-  console.log("SERVER <<< registerUpdate", registerUpdate);
+  console.debug("SERVER <<< registerUpdate", registerUpdate);
   clients[registerUpdate.id] = registerUpdate;
   pingHandler(registerUpdate.id);
   sendClients(socket);
@@ -125,7 +125,7 @@ ioServer.on("connection", (socket) => {
   });
 
   socket.on("registerRequest", function () {
-    console.log("SERVER <<< registerRequest");
+    console.debug("SERVER <<< registerRequest");
     registerRequestHandler(socket);
   });
 
@@ -134,7 +134,7 @@ ioServer.on("connection", (socket) => {
   });
 
   socket.on("pong", function (id) {
-    console.log("SERVER <<< pong", id);
+    console.debug("SERVER <<< pong", id);
     let now = Date.now();
     clients[id]["latency"] = (now - clients[id]["lastPing"]) / 2;
     sendClients(socket);
