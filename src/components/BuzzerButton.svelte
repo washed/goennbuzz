@@ -17,7 +17,10 @@
 
 <div>
     {#if $client.nameLocked}
-        <Button on:click={buzzerHandler}>
+        <Button
+            on:click={buzzerHandler}
+            style="height: 200px; width: 200px"
+            variant="outlined">
             {#if !$client.hasBuzzed}
                 <Label>BUZZ</Label>
             {:else}
