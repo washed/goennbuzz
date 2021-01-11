@@ -1,6 +1,5 @@
 <script>
     import io from "socket.io-client";
-    import IconButton, { Icon } from "@smui/icon-button";
     import NameForm from "../components/NameForm.svelte";
     import ClientTable from "../components/ClientTable.svelte";
     import BuzzerTable from "../components/BuzzerTable.svelte";
@@ -47,12 +46,6 @@
 </svelte:head>
 
 {#if typeof $client !== 'undefined' && $client != null}
-    {#if $client.nameLocked}
-        <h1>Goennbuzz/Join - Oh hi {$client.name}!</h1>
-    {:else}
-        <h1>Goennbuzz/Join</h1>
-    {/if}
-
     <NameForm />
     <BuzzerButton />
     <BuzzerTable {timestamps} />

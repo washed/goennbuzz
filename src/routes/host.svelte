@@ -37,7 +37,6 @@
     <title>Goennbuzz - Host</title>
 </svelte:head>
 
-<h1>Goennbuzz - Host!</h1>
 <NameForm />
 <Button on:click={resetButtonHandler}>
     <Label>RESET</Label>

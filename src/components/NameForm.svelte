@@ -1,6 +1,6 @@
 <script>
     import Textfield from "@smui/textfield";
-    import IconButton, { Icon } from "@smui/icon-button";
+    import Button, { Label, Icon } from "@smui/button";
     import { client, socket, role } from "../stores.js";
 
     $: (() => {
@@ -9,17 +9,29 @@
             $socket.emit("registerUpdate", $client);
         }
     })();
+
+    $: console.log($client.nameLocked);
 </script>
 
 <div>
     {#if typeof $client !== 'undefined' && $client != null}
-        <Textfield
-            bind:value={$client.name}
-            bind:disabled={$client.nameLocked}
-            label="Name" />
-        <IconButton toggle bind:pressed={$client.nameLocked}>
-            <Icon class="material-icons">check</Icon>
-            <Icon class="material-icons" on>edit</Icon>
-        </IconButton>
+        {#if $client.nameLocked}
+            <Button
+                color="secondary"
+                on:click={() => ($client.nameLocked = false)}>
+                <Label>{$client.name}</Label>
+                <Icon class="material-icons">edit</Icon>
+            </Button>
+        {:else}
+            <Textfield
+                bind:value={$client.name}
+                bind:disabled={$client.nameLocked}
+                label="Name" />
+            <Button
+                color="secondary"
+                on:click={() => ($client.nameLocked = true)}>
+                <Icon class="material-icons">check</Icon>
+            </Button>
+        {/if}
     {/if}
 </div>
