@@ -15,23 +15,22 @@
 
 <div>
     {#if typeof $client !== 'undefined' && $client != null}
-        {#if $client.nameLocked}
-            <Button
-                color="secondary"
-                on:click={() => ($client.nameLocked = false)}>
-                <Label>{$client.name}</Label>
-                <Icon class="material-icons">edit</Icon>
-            </Button>
-        {:else}
+        {#if !$client.nameLocked}
             <Textfield
                 bind:value={$client.name}
                 bind:disabled={$client.nameLocked}
                 label="Name" />
-            <Button
-                color="secondary"
-                on:click={() => ($client.nameLocked = true)}>
-                <Icon class="material-icons">check</Icon>
-            </Button>
         {/if}
+        <Button
+            touch
+            color="secondary"
+            on:click={() => ($client.nameLocked = !$client.nameLocked)}>
+            {#if $client.nameLocked}
+                <Label>{$client.name}</Label>
+                <Icon class="material-icons">edit</Icon>
+            {:else}
+                <Icon class="material-icons" on>check</Icon>
+            {/if}
+        </Button>
     {/if}
 </div>
