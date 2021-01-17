@@ -4,6 +4,8 @@
   import { socket, client, clients, role } from "../stores.js";
   import _ from "lodash";
 
+  export let fullID = false;
+
   function registerResponseHandler(registerResponse) {
     console.debug(`${$role} <<< registerResponse`, registerResponse);
     $client = registerResponse;
@@ -52,7 +54,13 @@
         {#each Object.values($clients) as client}
           <Row>
             <Cell>{client.name}</Cell>
-            <Cell>{client.id}</Cell>
+            <Cell>
+              {#if fullID}
+                {client.id}
+              {:else}
+                {client.id.substring(0, 4)}...
+              {/if}
+            </Cell>
             <Cell>{client.latency}</Cell>
           </Row>
         {/each}
