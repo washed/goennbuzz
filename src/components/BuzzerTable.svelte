@@ -17,6 +17,7 @@
   <DataTable table$aria-label="Buzzes" style="width: 100%;">
     <Head>
       <Row>
+        <Cell>Pos</Cell>
         <Cell>Name</Cell>
         <Cell>Time</Cell>
         <Cell>t+ [ms]</Cell>
@@ -25,6 +26,9 @@
     <Body>
       {#each timestamps as timestamp, i}
         <Row>
+          <Cell>
+            {i + 1}
+          </Cell>
           <Cell>
             {#if i == 0}
               <GlowyString string={timestamp.clientName} />
