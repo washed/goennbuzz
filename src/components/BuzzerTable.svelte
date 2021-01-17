@@ -1,6 +1,7 @@
 <script>
   import Card from "@smui/card";
   import DataTable, { Head, Body, Row, Cell } from "@smui/data-table";
+  import GlowyString from "../components/GlowyString.svelte";
   import { socket, role } from "../stores.js";
 
   let timestamps = [];
@@ -22,9 +23,15 @@
       </Row>
     </Head>
     <Body>
-      {#each timestamps as timestamp}
+      {#each timestamps as timestamp, i}
         <Row>
-          <Cell>{timestamp.clientName}</Cell>
+          <Cell>
+            {#if i == 0}
+              <GlowyString string={timestamp.clientName} />
+            {:else}
+              {timestamp.clientName}
+            {/if}
+          </Cell>
           <Cell>{new Date(timestamp.serverTimestamp).toLocaleTimeString()}</Cell
           >
           <Cell>{timestamp.offset}</Cell>

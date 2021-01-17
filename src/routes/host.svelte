@@ -8,17 +8,6 @@
 
   $role = "HOST";
   $socket = io();
-
-  function make_it_glow_bitch(str) {
-    var glowy_string_html = "<div>";
-    for (var i = 0; i < str.length; i++) {
-      glowy_string_html = glowy_string_html.concat(
-        "<span class='glow'>" + str.charAt(i) + "</span>"
-      );
-    }
-    glowy_string_html = glowy_string_html.concat("</div>");
-    return glowy_string_html;
-  }
 </script>
 
 <svelte:head>
