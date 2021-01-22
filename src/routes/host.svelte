@@ -25,7 +25,7 @@
 
   let activeMode = modeTabs[0];
 
-  if (typeof $hostConfig === "undefined") {
+  if (typeof $hostConfig === "undefined" || $hostConfig == null) {
     $hostConfig = {
       mode: activeMode.key,
       nBuzzConfig: $nBuzzConfig,
