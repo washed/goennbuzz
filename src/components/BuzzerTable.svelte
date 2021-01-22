@@ -2,13 +2,26 @@
   import Card from "@smui/card";
   import DataTable, { Head, Body, Row, Cell } from "@smui/data-table";
   import GlowyString from "../components/GlowyString.svelte";
-  import { socket, role } from "../stores.js";
+  import { socket, role, hostConfig, gameConfig, client } from "../stores.js";
 
   let timestamps = [];
+
+  $: mode = $role == "HOST" ? $hostConfig.mode : $gameConfig.mode;
+  $: reveal = $role == "HOST" ? true : false;
 
   $socket.on("timestampList", function (serverTimestamps) {
     console.debug(`${$role} <<< timestampList`, serverTimestamps);
     timestamps = serverTimestamps;
+  });
+
+  $socket.on("revealAnswers", function () {
+    console.debug(`${$role} <<< revealAnswers`);
+    reveal = true;
+  });
+
+  $socket.on("reset", function () {
+    console.debug(`${$role} <<< reset`);
+    reveal = false;
   });
 </script>
 
@@ -19,8 +32,12 @@
       <Row>
         <Cell>Pos</Cell>
         <Cell>Name</Cell>
-        <Cell>Time</Cell>
-        <Cell>t+ [ms]</Cell>
+        {#if mode == 0}
+          <Cell>Time</Cell>
+          <Cell>t+ [ms]</Cell>
+        {:else if mode == 1}
+          <Cell>Answer</Cell>
+        {/if}
       </Row>
     </Head>
     <Body>
@@ -36,9 +53,21 @@
               {timestamp.clientName}
             {/if}
           </Cell>
-          <Cell>{new Date(timestamp.serverTimestamp).toLocaleTimeString()}</Cell
-          >
-          <Cell>{timestamp.offset}</Cell>
+
+          {#if mode == 0}
+            <Cell
+              >{new Date(timestamp.serverTimestamp).toLocaleTimeString()}</Cell
+            >
+            <Cell>{timestamp.offset}</Cell>
+          {:else if mode == 1}
+            {#if reveal}
+              <Cell>{timestamp.rawPayload.buzzer}</Cell>
+            {:else if timestamp.rawPayload.client.id === $client.id}
+              <Cell>{timestamp.rawPayload.buzzer}</Cell>
+            {:else}
+              <Cell>?</Cell>
+            {/if}
+          {/if}
         </Row>
       {/each}
     </Body>

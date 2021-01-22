@@ -3,7 +3,6 @@
   import { client, role, socket } from "../stores.js";
 
   export let label = "Buzz";
-  export let labelBuzzed = "Buzzed";
 
   function buzzerHandler() {
     if (!$client.hasBuzzed) {
@@ -11,6 +10,7 @@
       let tsPayload = {
         client: $client,
         timestamp: Date.now(),
+        buzzer: label,
       };
       console.debug(`${$role} >>> buzz`, tsPayload);
       $socket.emit("buzz", tsPayload);
@@ -18,20 +18,14 @@
   }
 </script>
 
-<div>
-  {#if $client.nameLocked}
-    <Button
-      on:click={buzzerHandler}
-      style="height: 200px; width: 100%"
-      variant="outlined"
-    >
-      {#if !$client.hasBuzzed}
-        <Label>{label}</Label>
-      {:else}
-        <Label>{labelBuzzed}</Label>
-      {/if}
-    </Button>
+<Button
+  on:click={buzzerHandler}
+  style="height: 80px; width: 100%"
+  variant="outlined"
+>
+  {#if !$client.hasBuzzed}
+    <Label>{label}</Label>
   {:else}
-    <p>Lock in your name first! (You can change it anytime)</p>
+    <Label style="bold">{label}</Label>
   {/if}
-</div>
+</Button>

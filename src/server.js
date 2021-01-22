@@ -54,6 +54,7 @@ function buzzHandler(socket, payload) {
     clientTimestamp: payload.timestamp,
     serverTimestamp: serverTimestamp,
     offset: 0,
+    rawPayload: payload,
   });
   timestamps.sort(compareTimestamps);
   populateOffsets(timestamps);
@@ -76,7 +77,32 @@ function resetHandler(socket) {
   broadcastTimestamps(socket);
 }
 
+function emitConfig(socket) {
+  console.debug("SERVER >>> config");
+  socket.emit("config", gameConfig);
+}
+
+function broadcastConfig(socket) {
+  console.debug("SERVER >>> config");
+  socket.broadcast.emit("config", gameConfig);
+}
+
+function configChangeHandler(socket, config) {
+  gameConfig = config;
+  broadcastConfig(socket, gameConfig);
+}
+
+function revealAnswersHandler(socket) {
+  console.debug("SERVER >>> revealAnswers");
+  socket.emit("revealAnswers");
+  socket.broadcast.emit("revealAnswers");
+}
+
 var clients = {};
+var gameConfig = {
+  mode: 0,
+  nBuzzConfig: null,
+};
 
 function sendClients(socket) {
   var clientsToSend = {};
@@ -151,6 +177,7 @@ ioServer.on("connection", (socket) => {
   // emitReset(socket);
   emitTimestamps(socket);
   sendClients(socket);
+  emitConfig(socket);
 
   socket.on("buzz", function (payload) {
     buzzHandler(socket, payload);
@@ -178,6 +205,16 @@ ioServer.on("connection", (socket) => {
         clients[id].serverPrivate.lastPing) /
       2;
     sendClients(socket);
+  });
+
+  socket.on("configChanged", (config) => {
+    console.log("SERVER <<< configChanged", config);
+    configChangeHandler(socket, config);
+  });
+
+  socket.on("revealAnswers", () => {
+    console.log("SERVER <<< revealAnswers");
+    revealAnswersHandler(socket);
   });
 
   socket.on("disconnecting", () => {
