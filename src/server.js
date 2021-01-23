@@ -53,6 +53,9 @@ function buzzHandler(socket, payload) {
     clientName: payload.client.name,
     clientTimestamp: payload.timestamp,
     serverTimestamp: serverTimestamp,
+    serverTimestampCorrected:
+      serverTimestamp - clients[payload.client.id].latency,
+    latency: clients[payload.client.id].latency,
     offset: 0,
     rawPayload: payload,
   });
@@ -227,8 +230,8 @@ ioServer.on("connection", (socket) => {
 });
 
 function compareTimestamps(a, b) {
-  const timestampA = a.clientTimestamp;
-  const timestampB = b.clientTimestamp;
+  const timestampA = a.serverTimestampCorrected;
+  const timestampB = b.serverTimestampCorrected;
 
   let comparison = 0;
   if (timestampA > timestampB) {
@@ -242,10 +245,10 @@ function compareTimestamps(a, b) {
 function populateOffsets(timestampList) {
   if (Array.isArray(timestampList) && timestampList.length) {
     // Has to be sorted first!
-    const firstTimestamp = timestampList[0].clientTimestamp;
+    const firstTimestamp = timestampList[0].serverTimestampCorrected;
 
     timestampList.forEach((timestamp) => {
-      timestamp.offset = timestamp.clientTimestamp - firstTimestamp;
+      timestamp.offset = timestamp.serverTimestampCorrected - firstTimestamp;
     });
   }
 }
